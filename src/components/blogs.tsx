@@ -11,6 +11,11 @@ interface BlogPost {
   views: number;
   comments: number;
 }
+
+interface BlogComponentProps {
+  posts: BlogPost[];
+  categories: string[];
+}
 const BlogCard: React.FC<BlogPost> = ({
   category,
   title,
@@ -89,11 +94,6 @@ const BlogCard: React.FC<BlogPost> = ({
   );
 };
 
-interface BlogComponentProps {
-  posts: BlogPost[];
-  categories: string[];
-}
-
 const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
   const [activeCategory, setActiveCategory] = useState<string>(categories[0]);
 
@@ -103,7 +103,7 @@ const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
 
   return (
     <div className="px-4 py-8 flex flex-col justify-center items-center">
-      <h2 className="text-3xl font-bold mb-4">Recent Blog Posts</h2>
+      <h2 className="text-3xl font-bold text-blue-950 mb-6">Recent Blog Posts</h2>
 
       {/* Tab Navigation */}
       <div className="flex mb-4 border-b">
