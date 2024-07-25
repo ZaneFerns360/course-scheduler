@@ -1,4 +1,4 @@
-
+// Code for the landing page
 import React from "react";
 import BlogComponent from "@/components/blogs";
 import LoadingNavbar from "@/components/LoadingNavbar";
