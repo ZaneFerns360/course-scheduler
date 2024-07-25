@@ -100,7 +100,7 @@ const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6">Recent Blog Posts</h2>
+      <h2 className="text-3xl font-bold text-blue-950 mb-6">Recent Blog Posts</h2>
 
       {/* Tab Navigation */}
       <div className="flex mb-6 border-b">
