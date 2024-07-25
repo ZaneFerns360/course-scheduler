@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
                 degree milestones.
               </p>
               <h4 className="text-md mb-2 mt-4 font-semibold text-blue-900">
-                Can't find something?
+                Can &apos t find something?
               </h4>
               <Link href="#" className="text-blue-600 hover:underline">
                 Give Feedback
