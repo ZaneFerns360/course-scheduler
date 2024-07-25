@@ -1,4 +1,5 @@
 import React from "react";
+import Navbar from "@/components/Navbar";
 import BlogComponent from "@/components/blogs";
 import { comment } from "postcss";
 
@@ -67,11 +68,9 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <h1 className="text-4xl font-bold text-center my-8">My Blog</h1>
-      <BlogComponent
-        posts={posts}
-        categories={categories}
-      />
+      <BlogComponent posts={posts} categories={categories} />
     </div>
   );
 };
