@@ -31,7 +31,7 @@ const BlogCard: React.FC<BlogPost> = ({
           className="lg:h-48 md:h-36 w-full object-cover object-center"
           height={1000}
           width={1000}
-          src="/ssr3.png"
+          src={imageUrl}
           alt={title}
         />
         <div className="p-6">

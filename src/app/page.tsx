@@ -1,6 +1,5 @@
-
+// Code for the landing page
 import React from "react";
-import BlogComponent from "@/components/blogs";
 
 export default function Home() {
   return (
