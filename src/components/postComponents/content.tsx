@@ -9,7 +9,6 @@ const Content = () => {
     () => ({
       readonly: false,
       placeholder: "Start typing...",
-      filebrowser: "IFileBrowserOptions",
       minHeight : 500,
       // theme: "dark"
     }),

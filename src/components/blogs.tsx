@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface BlogPost {
   id: number;
@@ -21,9 +22,11 @@ const BlogCard: React.FC<BlogPost> = ({
   return (
     <div className="p-4 md:w-1/3">
       <div className="h-full border-2 border-gray-500 border-opacity-60 rounded-lg overflow-hidden">
-        <img
+        <Image
           className="lg:h-48 md:h-36 w-full object-cover object-center"
-          src={imageUrl}
+          height={1000}
+          width={1000}
+          src="/ssr3.png"
           alt={title}
         />
         <div className="p-6">
@@ -35,7 +38,7 @@ const BlogCard: React.FC<BlogPost> = ({
           </h1>
           <p className="leading-relaxed mb-3">{excerpt}</p>
           <div className="flex items-center flex-wrap">
-            <a className="text-green-500 inline-flex items-center md:mb-2 lg:mb-0 cursor-pointer">
+            <a className="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0 cursor-pointer">
               Learn More
               <svg
                 className="w-4 h-4 ml-2"
@@ -99,11 +102,11 @@ const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6">Recent Blog Posts</h2>
+    <div className="px-4 py-8 flex flex-col justify-center items-center">
+      <h2 className="text-3xl font-bold mb-4">Recent Blog Posts</h2>
 
       {/* Tab Navigation */}
-      <div className="flex mb-6 border-b">
+      <div className="flex mb-4 border-b">
         {categories.map((category) => (
           <button
             key={category}
@@ -119,9 +122,9 @@ const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
       </div>
 
       {/* Blog Posts */}
-      <section className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="flex flex-wrap -m-4">
+      <section className="text-gray-600 body-font w-full">
+        <div className="w-full px-5 mx-auto">
+          <div className="w-full flex flex-wrap">
             {filteredPosts.map((post, index) => (
               <BlogCard
                 key={index}

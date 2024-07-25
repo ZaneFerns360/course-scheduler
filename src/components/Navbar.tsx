@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
           <div className="border-t border-gray-700"></div>
           <div className="flex h-fit py-2">
             <div className="flex w-1/4 items-center justify-center">
-              <Link href="/home-page">
+              <Link href="/home/home-page">
                 <Image
                   src="/clogo.png"
                   alt="SRM Logo"
@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
             </div>
             <div className="flex w-3/4 flex-col pb-1.5">
               <div className="flex justify-end space-x-8 py-4 pr-14 ">
-                <Link href={"/home-page"}>
+                <Link href={"/home/home-page"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>Home</span>
                   </button>
@@ -179,12 +179,12 @@ const Navbar: React.FC = () => {
                     <span>Testomonay</span>
                   </button>
                 </Link>
-                <Link href={"/my-blogs"}>
+                <Link href={"/home/my-blogs"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>My Blogs</span>
                   </button>
                 </Link>
-                <Link href={"#testomany"}>
+                <Link href={"#contact"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>Contact</span>
                   </button>
@@ -236,7 +236,7 @@ const Navbar: React.FC = () => {
       {/* Mobile Navigation */}
       <nav className="fixed top-0 z-50 w-full bg-gray-900 font-semibold capitalize text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/">
+          <Link href="/home/home-page">
             <Image
               src="/clogo.png"
               alt="Logo"
@@ -277,7 +277,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Main Menu Items */}
-          <Link href={"/"}>
+          <Link href={"/home/home-page"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
               <span>Home</span>
             </button>
@@ -298,7 +298,7 @@ const Navbar: React.FC = () => {
               <span>Testomonay</span>
             </button>
           </Link>
-          <Link href={"/"}>
+          <Link href={"/home/my-blogs"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
               <span>My Blogs</span>
             </button>
@@ -308,7 +308,7 @@ const Navbar: React.FC = () => {
               <span>Contact</span>
             </button>
           </Link>
-          <Link href={"/"}>
+          <Link href={"/new-post"}>
             <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
               <span>New Post</span>
               <ChevronRight size={20} />

@@ -3,7 +3,6 @@ import React, { useState, useRef, useMemo } from "react";
 import Content from "./postComponents/content";
 import { log } from "console";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const AddPost = () => {
   const [title, setTitle] = useState("");
@@ -11,15 +10,10 @@ const AddPost = () => {
   const [error, setError] = useState(null);
   const [startdone, isStartDone] = useState(false);
   const [enddone, isEndDone] = useState(false);
-  const router = useRouter();
 
   function checkIfStartDone(e: any) {
     isStartDone(true);
     e.preventDefault();
-  }
-
-  function checkIfEndDone() {
-    router.push("/home-page");
   }
 
   return (
@@ -75,7 +69,7 @@ const AddPost = () => {
         <div className="md:w-[95%] w-[90%] h-[90%] md:h-[90%]">
           <div className=" bg-gray-100 rounded-lg p-4 flex flex-col md:m-auto w-full min-h-fit">
             <Content />
-            <Link href={"/home-page"}>
+            <Link href={"/home/home-page"}>
               <button className="text-white w-full mt-3 bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
                 Submit
               </button>
