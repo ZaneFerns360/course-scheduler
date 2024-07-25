@@ -10,6 +10,11 @@ interface BlogPost {
   views: number;
   comments: number;
 }
+
+interface BlogComponentProps {
+  posts: BlogPost[];
+  categories: string[];
+}
 const BlogCard: React.FC<BlogPost> = ({
   category,
   title,
@@ -85,11 +90,6 @@ const BlogCard: React.FC<BlogPost> = ({
     </div>
   );
 };
-
-interface BlogComponentProps {
-  posts: BlogPost[];
-  categories: string[];
-}
 
 const BlogComponent: React.FC<BlogComponentProps> = ({ posts, categories }) => {
   const [activeCategory, setActiveCategory] = useState<string>(categories[0]);
