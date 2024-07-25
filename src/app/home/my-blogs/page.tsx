@@ -1,5 +1,5 @@
 import React from 'react'
-import BlogComponent from '@/components/blogs';
+import BlogDisplayCard from '@/components/BlogDisplayCard';
 
 const page = () => {
       const categories = ["All", "Technology", "Design", "Marketing"];
@@ -83,7 +83,7 @@ const page = () => {
       ];
   return (
     <div>
-      <BlogComponent posts={posts} categories={categories} />
+      <BlogDisplayCard posts={posts} categories={categories} />
     </div>
   );
 }

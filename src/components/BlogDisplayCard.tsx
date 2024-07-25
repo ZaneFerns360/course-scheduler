@@ -12,7 +12,8 @@ interface BlogComponentProps {
   posts: BlogPost[];
 }
 
-const BlogComponent: React.FC<BlogComponentProps> = ({ posts }) => {
+const BlogDisplayCard: React.FC<BlogComponentProps> = ({ posts }) => {
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold mb-6">Recent Blog Posts</h2>
@@ -38,4 +39,4 @@ const BlogComponent: React.FC<BlogComponentProps> = ({ posts }) => {
   );
 };
 
-export default BlogComponent;
+export default BlogDisplayCard;
