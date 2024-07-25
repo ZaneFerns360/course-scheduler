@@ -191,7 +191,7 @@ const Navbar: React.FC = () => {
                 </Link>
                 <Link href={"/new-post"}>
                   <button className="flex items-center space-x-1 transition duration-300 hover:text-yellow-300">
-                    <SquarePlus size={30} />
+                    <SquarePlus size={27} />
                   </button>
                 </Link>
               </div>

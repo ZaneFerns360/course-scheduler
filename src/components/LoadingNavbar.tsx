@@ -93,7 +93,7 @@ const LoadingNavbar: React.FC = () => {
         <div className="flex flex-col px-20 ">
           <div className="border-t border-gray-700"></div>
           <div className="flex w-full h-fit py-2">
-            <div className="flex w-full items-center justify-center">
+            <div className="flex w-1/4 items-center justify-center">
               <Link href="/home/home-page">
                 <Image
                   src="/clogo.png"
@@ -103,15 +103,15 @@ const LoadingNavbar: React.FC = () => {
                   className="scale-x-125"
                 />
               </Link>
-              <div className="flex w-full flex-col pb-1.5">
-                <div className="flex justify-end w-full  py-4 ">
+            </div>
+            <div className="flex w-3/4 flex-col pb-1.5">
+              <div className="flex justify-end space-x-8 py-4 pr-14 ">
                   <Link href={"/home/home-page"}>
                     <button className="flex items-center text-lg transition duration-300 hover:text-yellow-300">
                       <span>Sign In</span>
                     </button>
                   </Link>
-                </div>
-              </div>
+               </div>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ const LoadingNavbar: React.FC = () => {
             </ul>
           </div>
         </div>
-      )}{" "}
+      )}
       {/* Mobile Navigation */}
       <nav className="fixed top-0 z-50 w-full bg-gray-900 font-semibold capitalize text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
