@@ -5,16 +5,12 @@ import { posts, categories } from "@/data/blogsdata";
 
 const HomePage: React.FC = () => {
   return (
-    <div>
+    <>
       <Navbar />
-      <h1 className="text-4xl text-blue-950 font-bold text-center my-8">
-        My Blog
-      </h1>
-      <BlogComponent
-        posts={posts}
-        categories={categories}
-      />
-    </div>
+      <div className="mt-16">
+        <BlogComponent posts={posts} categories={categories} />
+      </div>
+    </>
   );
 };
 

@@ -116,40 +116,7 @@ const LoadingNavbar: React.FC = () => {
           </div>
         </div>
       </nav>
-      {dropdown && dropdownContent[dropdown] && (
-        <div className="fixed top-[70px] z-40 hidden w-full bg-white text-black shadow-lg transition-all duration-300 ease-out md:block">
-          <div className="container mx-auto px-8 py-12">
-            <button
-              className="absolute right-8 top-8 text-xl text-gray-600 hover:text-gray-800"
-              onClick={() => setDropdown(null)}
-            >
-              <X size={30} />
-            </button>
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold capitalize">{dropdown}</h2>
-            </div>
-            <ul className="grid grid-cols-3 gap-x-8 gap-y-4">
-              {dropdownContent[dropdown].map((item, index) => (
-                <li key={index} className="group">
-                  <Link
-                    href={item.href}
-                    className="flex items-center space-x-3 text-lg font-semibold transition duration-300 hover:text-blue-600"
-                  >
-                    <span className="text-blue-500 transition-colors duration-300 group-hover:text-blue-600">
-                      {item.icon}
-                    </span>
-                    <span>{item.name}</span>
-                    <ChevronRight
-                      className="ml-auto opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                      size={20}
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+    
       {/* Mobile Navigation */}
       <nav className="fixed top-0 z-50 w-full bg-gray-900 font-semibold capitalize text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
@@ -264,9 +231,6 @@ const LoadingNavbar: React.FC = () => {
             ))}
           </div>
         )}
-      </div>
-      <div className="md:mt-[150px] lg:mt-[160px]">
-        {/* Content that comes below the navbar */}
       </div>
     </>
   );

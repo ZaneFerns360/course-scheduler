@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 interface BlogPost {
   id: number;
   title: string;
@@ -23,7 +24,7 @@ const BlogCard: React.FC<BlogPost> = ({
   comments,
 }) => {
   return (
-    <div className="p-4 md:w-1/3">
+    <div className="p-4 ">
       <div className="h-full border-2 border-gray-500 border-opacity-60 rounded-lg overflow-hidden">
         <Image
           className="lg:h-48 md:h-36 w-full object-cover object-center"
@@ -41,7 +42,7 @@ const BlogCard: React.FC<BlogPost> = ({
           </h1>
           <p className="leading-relaxed mb-3">{excerpt}</p>
           <div className="flex items-center flex-wrap">
-            <a className="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0 cursor-pointer">
+            <Link href={"/blog-view"}  className="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0 cursor-pointer">
               Learn More
               <svg
                 className="w-4 h-4 ml-2"
@@ -54,7 +55,7 @@ const BlogCard: React.FC<BlogPost> = ({
                 <path d="M5 12h14"></path>
                 <path d="M12 5l7 7-7 7"></path>
               </svg>
-            </a>
+            </Link>
             <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
               <svg
                 className="w-4 h-4 mr-1"
@@ -96,7 +97,7 @@ const BlogDisplayCard: React.FC<BlogComponentProps> = ({ posts }) => {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6">Recent Blog Posts</h2>
+      <h2 className="text-3xl font-bold mb-6">My Blog Posts</h2>
 
       {/* Blog Posts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
