@@ -42,17 +42,30 @@ const TestimonialsSection: React.FC = () => {
   const testimonials: TestimonialProps[] = [
     {
       content:
-        "Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90's microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.",
+        " This course helped me a lotin the holistic development. ",
       name: "Holden Caulfield",
-      position: "UI DEVELOPER",
+      position: "Personality Development",
       imageUrl: "https://dummyimage.com/106x106",
     },
     {
       content:
-        "Synth chartreuse iPhone lomo cray raw denim brunch everyday carry neutra before they sold out fixie 90's microdosing. Tacos pinterest fanny pack venmo, post-ironic heirloom try-hard pabst authentic iceland.",
+        "I am very happy with the course. It helped me in my career growth.",
       name: "Alper Kamu",
-      position: "DESIGNER",
+      position: "sever maintenance",
       imageUrl: "https://dummyimage.com/107x107",
+    },
+    {
+      content:
+        "This course helped me a lot in the holistic development.",
+      name: "Holden Caulfield",
+      position: "Personality Development",
+      imageUrl: "https://dummyimage.com/108x108",
+    },
+    {
+        content:"I am very happy with the course. It helped me in my career growth.",
+        name:"Alper Kamu",
+        position:"sever maintenance",
+        imageUrl:"https://dummyimage.com/109x109"
     },
   ];
 

@@ -3,6 +3,7 @@ import Navbar from "@/components/HomeNavbar";
 import BlogComponent from "@/components/blogs";
 import { posts, categories } from "@/data/blogsdata";
 
+
 const HomePage: React.FC = () => {
   return (
     <>

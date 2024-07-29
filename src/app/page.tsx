@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import Hero from "@/components/Hero";
 import Link from "next/link";
+import Testimonials from "@/components/testamonials";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
           </button>
         </Link>
       </main>
+       {/* <Testimonials/> */}
       <Footer />
     </>
   );
