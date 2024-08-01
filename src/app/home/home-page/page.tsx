@@ -1,8 +1,7 @@
 import React from "react";
-import Navbar from "@/components/HomeNavbar";
+import Navbar from "@/components/StudentNavbar";
 import BlogComponent from "@/components/blogs";
 import { posts, categories } from "@/data/blogsdata";
-
 
 const HomePage: React.FC = () => {
   return (
