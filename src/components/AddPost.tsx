@@ -1,20 +1,25 @@
 "use client";
 import React, { useState, useRef, useMemo } from "react";
 import Content from "./postComponents/content";
-import { log } from "console";
 import Link from "next/link";
-import { categories } from "@/data/blogsdata";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
 
 const AddPost = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [startdone, isStartDone] = useState(false);
 
   const [post, setPost] = useState({
     title: "",
     content: "",
     descreption: "",
-    categoryID: "",
+    courseName: "",
   });
 
   function checkIfStartDone(e: any) {
@@ -22,12 +27,8 @@ const AddPost = () => {
     e.preventDefault();
   }
 
-  function titleChange(e: any) {
-    setPost({ ...post, title: e.target.value });
-  }
-
-  function desChange(e: any) {
-    setPost({ ...post, descreption: e.target.value });
+  function handleChange(e: any) {
+    setPost({ ...post, [e.target.name]: e.target.value });
   }
 
   return (
@@ -52,7 +53,7 @@ const AddPost = () => {
                 name="title"
                 placeholder="Title..."
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                onChange={titleChange}
+                onChange={handleChange}
               />
             </div>
             <div className="relative mb-4">
@@ -69,8 +70,27 @@ const AddPost = () => {
                 name="descreption"
                 className="w-full min-h-[300px] max-h-[300px] bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder="Write your descreption here which will be visible on the thumbnail..."
-                onChange={desChange}
+                onChange={handleChange}
               />
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a Course" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="apple">Apple</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="blueberry">Blueberry</SelectItem>
+                    <SelectItem value="grapes">Grapes</SelectItem>
+                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectItem value="pineappl">Pineapple</SelectItem>
+                    <SelectItem value="pineapp">Pineapple</SelectItem>
+                    <SelectItem value="pineap">Pineapple</SelectItem>
+                    <SelectItem value="pine">Pineapple</SelectItem>
+                    <SelectItem value="pi">Pineapple</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <button
               onClick={checkIfStartDone}

@@ -2,6 +2,8 @@
 import React, { useState, useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 
+
+
 const Content = () => {
   const [content, setContent] = useState("");
   const editor = useRef(null);
@@ -10,7 +12,6 @@ const Content = () => {
       readonly: false,
       placeholder: "Start typing...",
       minHeight : 500,
-      // theme: "dark"
     }),
     []
   );
@@ -21,7 +22,7 @@ const Content = () => {
         ref={editor}
         value={content}
         config={config}
-        onChange={(newContent) => setContent(newContent)}
+        onChange={newContent => setContent(newContent)}
       />
     </div>
   );
