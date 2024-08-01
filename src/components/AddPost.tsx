@@ -3,17 +3,31 @@ import React, { useState, useRef, useMemo } from "react";
 import Content from "./postComponents/content";
 import { log } from "console";
 import Link from "next/link";
+import { categories } from "@/data/blogsdata";
 
 const AddPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [error, setError] = useState(null);
   const [startdone, isStartDone] = useState(false);
-  const [enddone, isEndDone] = useState(false);
+
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+    descreption: "",
+    categoryID: "",
+  });
 
   function checkIfStartDone(e: any) {
     isStartDone(true);
     e.preventDefault();
+  }
+
+  function titleChange(e: any) {
+    setPost({ ...post, title: e.target.value });
+  }
+
+  function desChange(e: any) {
+    setPost({ ...post, descreption: e.target.value });
   }
 
   return (
@@ -38,6 +52,7 @@ const AddPost = () => {
                 name="title"
                 placeholder="Title..."
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                onChange={titleChange}
               />
             </div>
             <div className="relative mb-4">
@@ -54,6 +69,7 @@ const AddPost = () => {
                 name="descreption"
                 className="w-full min-h-[300px] max-h-[300px] bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder="Write your descreption here which will be visible on the thumbnail..."
+                onChange={desChange}
               />
             </div>
             <button
