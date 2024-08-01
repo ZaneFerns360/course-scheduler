@@ -179,7 +179,7 @@ const LoadingNavbar: React.FC = () => {
           ))}
           <Link href={"/"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Testomonay</span>
+              <span>Testimonies</span>
             </button>
           </Link>
           <Link href={"/home/my-blogs"}>
