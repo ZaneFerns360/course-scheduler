@@ -1,8 +1,11 @@
 import React from 'react'
-
+import BlogPage from '@/components/blogpage'
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <BlogPage />
+    </div>
+
   )
 }
 
