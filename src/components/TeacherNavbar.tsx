@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -8,9 +8,25 @@ import {
   X,
   Menu,
   ArrowLeft,
+  Home,
+  Book,
+  Search,
   Users,
   GraduationCap,
+  NewspaperIcon,
   Calendar,
+  Briefcase,
+  Phone,
+  MoveRight,
+  Globe,
+  Info,
+  School,
+  UserPlus,
+  UserCheck,
+  Target,
+  Building2,
+  FileText,
+  FileCheck2,
   BookOpen,
   FileSignature,
   ClipboardCheck,
@@ -19,8 +35,17 @@ import {
   FlaskConical,
   BadgeCheck,
   Library,
+  MessageSquare,
+  FolderGit2,
   Bell,
-  BellDot,
+  MessageCircleWarning,
+  Cpu,
+  CircuitBoard,
+  Cog,
+  Atom,
+  Code2,
+  CreditCard,
+  Images,
 } from "lucide-react";
 
 interface DropdownItem {
@@ -34,7 +59,7 @@ interface DropdownContent {
 }
 
 const dropdownContent: DropdownContent = {
-  Courses: [
+  Cources: [
     {
       name: "Autonomous Curriculum",
       href: "/academics/programs",
@@ -92,6 +117,15 @@ const Navbar: React.FC = () => {
   const [dropdown, setDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null);
+
+  const [rollNumber, setRollNumber] = useState("admin");
+
+  useEffect(() => {
+    const storedRollNumber = sessionStorage.getItem("rollNumber");
+    if (storedRollNumber) {
+      setRollNumber(storedRollNumber);
+    }
+  }, []);
 
   const handleDropdown = (menu: string) => {
     if (dropdown === menu) {
@@ -151,12 +185,12 @@ const Navbar: React.FC = () => {
                 ))}
                 <Link href={"#testomany"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
-                    <span>Testimonies</span>
+                    <span>Testomonay</span>
                   </button>
                 </Link>
                 <Link href={"/home/my-blogs"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
-                    <span>My Department</span>
+                    <span>My Blogs</span>
                   </button>
                 </Link>
                 <Link href={"#contact"}>
@@ -166,9 +200,13 @@ const Navbar: React.FC = () => {
                 </Link>
                 <Link href={"/new-post"}>
                   <button className="flex items-center space-x-1 transition duration-300 hover:text-yellow-300">
-                    <Bell size={27} />
+                    <SquarePlus size={27} />
                   </button>
                 </Link>
+                <div className="flex items-center space-x-2 text-lg">
+                  <Users size={20} />
+                  <span>{rollNumber}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -270,7 +308,7 @@ const Navbar: React.FC = () => {
           ))}
           <Link href={"/"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Testimonies</span>
+              <span>Testomonay</span>
             </button>
           </Link>
           <Link href={"/home/my-blogs"}>

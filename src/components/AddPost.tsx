@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState } from "react";
 import Content from "./postComponents/content";
 import Link from "next/link";
 import {
@@ -7,37 +7,92 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/Select";
 
 const AddPost = () => {
   const [startdone, isStartDone] = useState(false);
-
   const [post, setPost] = useState({
     title: "",
     content: "",
-    descreption: "",
+    description: "",
     courseName: "",
   });
+  const [file, setFile] = useState(null);
 
-  function checkIfStartDone(e: any) {
-    isStartDone(true);
+  function checkIfStartDone(e) {
     e.preventDefault();
+    isStartDone(true);
   }
 
-  function handleChange(e: any) {
+  function handleChange(e) {
     setPost({ ...post, [e.target.name]: e.target.value });
+  }
+
+  function handleContentChange(newContent) {
+    setPost({ ...post, content: newContent });
+  }
+
+  function handleFileChange(e) {
+    setFile(e.target.files[0]);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      let imageId = null;
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const imageResponse = await fetch("http://localhost:8055/files", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (imageResponse.ok) {
+          const imageData = await imageResponse.json();
+          imageId = imageData.data.id;
+        } else {
+          throw new Error("Failed to upload image");
+        }
+      }
+
+      const postData = {
+        status: "published",
+        title: post.title,
+        description: post.description,
+        content: post.content,
+        image: imageId,
+      };
+
+      const response = await fetch("http://localhost:8055/items/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (response.ok) {
+        console.log("Post submitted successfully");
+        // Redirect or show success message
+      } else {
+        console.error("Failed to submit post");
+        // Show error message
+      }
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      // Show error message
+    }
   }
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center mx-auto">
-      {startdone ? (
-        <></>
-      ) : (
+      {!startdone ? (
         <div className="md:w-[50%] w-[85%] h-[80%] md:h-[85%]">
-          <div className=" bg-gray-100 rounded-lg p-8 flex flex-col md:m-auto w-full h-full md:mt-0">
+          <div className="bg-gray-100 rounded-lg p-8 flex flex-col md:m-auto w-full h-full md:mt-0">
             <div className="relative mb-4">
               <label
                 htmlFor="title"
@@ -58,20 +113,40 @@ const AddPost = () => {
             </div>
             <div className="relative mb-4">
               <label
-                htmlFor="descreption"
+                htmlFor="description"
                 className="block mb-2 text-sm font-medium text-black"
               >
                 <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
-                  Descreption
+                  Description
                 </h2>
               </label>
               <textarea
-                id="descreption"
-                name="descreption"
+                id="description"
+                name="description"
                 className="w-full min-h-[300px] max-h-[300px] bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                placeholder="Write your descreption here which will be visible on the thumbnail..."
+                placeholder="Write your description here which will be visible on the thumbnail..."
                 onChange={handleChange}
               />
+            </div>
+            <div className="relative mb-4">
+              <label
+                htmlFor="file"
+                className="block mb-2 text-sm font-medium text-black"
+              >
+                <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
+                  Upload Image
+                </h2>
+              </label>
+              <input
+                type="file"
+                id="file"
+                name="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              />
+            </div>
+            <div className="relative mb-4">
               <Select>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Course" />
@@ -96,18 +171,23 @@ const AddPost = () => {
               onClick={checkIfStartDone}
               className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
             >
-              Submit
+              Next
             </button>
           </div>
         </div>
-      )}
-      {startdone && (
+      ) : (
         <div className="md:w-[95%] w-[90%] h-[90%] md:h-[90%]">
-          <div className=" bg-gray-100 rounded-lg p-4 flex flex-col md:m-auto w-full min-h-fit">
-            <Content />
+          <div className="bg-gray-100 rounded-lg p-4 flex flex-col md:m-auto w-full min-h-fit">
+            <Content onContentChange={handleContentChange} />
+            <button
+              onClick={handleSubmit}
+              className="text-white w-full mt-3 bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            >
+              Submit
+            </button>
             <Link href={"/home/home-page"}>
               <button className="text-white w-full mt-3 bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                Submit
+                Back
               </button>
             </Link>
           </div>

@@ -106,17 +106,17 @@ const LoadingNavbar: React.FC = () => {
             </div>
             <div className="flex w-3/4 flex-col pb-1.5">
               <div className="flex justify-end space-x-8 py-4 pr-14 ">
-                  <Link href={"/home/home-page"}>
-                    <button className="flex items-center text-lg transition duration-300 hover:text-yellow-300">
-                      <span>Sign In</span>
-                    </button>
-                  </Link>
-               </div>
+                <Link href={"/signin"}>
+                  <button className="flex items-center text-lg transition duration-300 hover:text-yellow-300">
+                    <span>Sign In</span>
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </nav>
-    
+
       {/* Mobile Navigation */}
       <nav className="fixed top-0 z-50 w-full bg-gray-900 font-semibold capitalize text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
@@ -179,7 +179,7 @@ const LoadingNavbar: React.FC = () => {
           ))}
           <Link href={"/"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Testimonies</span>
+              <span>Testomonay</span>
             </button>
           </Link>
           <Link href={"/home/my-blogs"}>
