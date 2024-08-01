@@ -8,25 +8,9 @@ import {
   X,
   Menu,
   ArrowLeft,
-  Home,
-  Book,
-  Search,
   Users,
   GraduationCap,
-  NewspaperIcon,
   Calendar,
-  Briefcase,
-  Phone,
-  MoveRight,
-  Globe,
-  Info,
-  School,
-  UserPlus,
-  UserCheck,
-  Target,
-  Building2,
-  FileText,
-  FileCheck2,
   BookOpen,
   FileSignature,
   ClipboardCheck,
@@ -35,17 +19,6 @@ import {
   FlaskConical,
   BadgeCheck,
   Library,
-  MessageSquare,
-  FolderGit2,
-  Bell,
-  MessageCircleWarning,
-  Cpu,
-  CircuitBoard,
-  Cog,
-  Atom,
-  Code2,
-  CreditCard,
-  Images,
 } from "lucide-react";
 
 interface DropdownItem {
@@ -173,7 +146,7 @@ const Navbar: React.FC = () => {
                     <span>Home</span>
                   </button>
                 </Link>
-                {Object.keys(dropdownContent).map((key) => (
+                {/* {Object.keys(dropdownContent).map((key) => (
                   <button
                     key={key}
                     onClick={() => handleDropdown(key)}
@@ -187,7 +160,7 @@ const Navbar: React.FC = () => {
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>Testomonay</span>
                   </button>
-                </Link>
+                </Link> */}
                 <Link href={"/home/my-blogs"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>My Blogs</span>
