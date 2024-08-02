@@ -14,9 +14,9 @@ export default function Home() {
       <LoadingNavbar />
       <main className="relative bg-transparent flex-col min-h-screen w-full items-center justify-center">
         <Image
-          src={"/landing_bg.gif"}
+          src="/Landing_bg.gif"
           alt="Hero"
-          height={1000}
+          height={10000}
           width={1000}
           className="-z-10 w-full h-screen"
         />
@@ -26,7 +26,7 @@ export default function Home() {
           </button>
         </Link>
       </main>
-       {/* <Testimonials/> */}
+      {/* <Testimonials/> */}
       <Footer />
     </>
   );
