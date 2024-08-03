@@ -25,24 +25,24 @@ const AddPost = () => {
   });
   const [file, setFile] = useState(null);
 
-  function checkIfStartDone(e) {
+  function checkIfStartDone(e: any) {
     e.preventDefault();
     isStartDone(true);
   }
 
-  function handleChange(e) {
+  function handleChange(e: any) {
     setPost({ ...post, [e.target.name]: e.target.value });
   }
 
-  function handleContentChange(newContent) {
+  function handleContentChange(newContent: any) {
     setPost({ ...post, content: newContent });
   }
 
-  function handleFileChange(e) {
+  function handleFileChange(e: any) {
     setFile(e.target.files[0]);
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: any) {
     e.preventDefault();
     try {
       let imageId = null;
