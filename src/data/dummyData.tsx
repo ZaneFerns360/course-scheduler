@@ -6,7 +6,7 @@ export const recipeData: Recipe = {
   reviews: 17,
   description:
     "These chicken skewers are a family favorite! Very easy, deliciously smoky, nice and sweet, with a good amount of spice and bite. Air fryer, grill, and oven-friendly!",
-  image: "https://example.com/honey-chipotle-chicken-skewers.jpg",
+  image: "/Honey-Chipotle-Chicken-Skewers.webp",
   totalTime: "20 minutes",
   yield: "3-4 servings",
   ingredients: {
@@ -39,7 +39,7 @@ export const blogPostData: BlogPost = {
   author: {
     name: "Lindsay",
     bio: "I'm a former 4th grade teacher, now full time blogger. My husband Bjork and I live in Minnesota. Favorite things include my camera, lake days, and dark chocolate.",
-    image: "https://example.com/lindsay-profile.jpg",
+    image: "/Honey-Chipotle-Chicken-Skewers.webp",
   },
   content:
     "Bjork is still rocking the protein guy life, and, okay, I'm trying to eat more protein too, so we make chicken A LOT right now. And as much as I love the absolute all-star air fryer chicken (which is to the maximum), lately I've been mixing it up with these honey chipotle chicken skewers.",

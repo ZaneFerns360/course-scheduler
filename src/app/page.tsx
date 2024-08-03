@@ -14,14 +14,14 @@ export default function Home() {
       <LoadingNavbar />
       <main className="relative bg-transparent flex-col min-h-screen w-full items-center justify-center">
         <Image
-          src={"/landing_bg.gif"}
+          src="/Landing_bg.gif"
           alt="Hero"
-          height={1000}
+          height={10000}
           width={1000}
           className="-z-10 w-full h-screen"
         />
         <Link href={"/signin"}>
-          <button className=" border-4 p-4 rounded-full border-white  text-white absolute left-[38vw] top-64 bg-transparent text-6xl font-bold">
+          <button className=" border-2 rounded-full border-white  text-white absolute left-[40vw] top-64 bg-transparent px-10 py-4 text-4xl font-bold">
             Get Started
           </button>
         </Link>

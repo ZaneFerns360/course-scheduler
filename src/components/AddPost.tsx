@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Content from "./postComponents/content";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   Select,
@@ -10,8 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/Select";
-
+import { useRouter } from "next/navigation";
+const Content = dynamic(() => import("./postComponents/content"), {
+  ssr: false,
+});
 const AddPost = () => {
+  const router = useRouter();
   const [startdone, isStartDone] = useState(false);
   const [post, setPost] = useState({
     title: "",
@@ -77,6 +81,8 @@ const AddPost = () => {
 
       if (response.ok) {
         console.log("Post submitted successfully");
+        router.push("/");
+
         // Redirect or show success message
       } else {
         console.error("Failed to submit post");
