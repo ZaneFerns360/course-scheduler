@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Content from "./postComponents/content";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   Select,
@@ -11,7 +11,9 @@ import {
   SelectValue,
 } from "@/components/Select";
 import { useRouter } from "next/navigation";
-
+const Content = dynamic(() => import("./postComponents/content"), {
+  ssr: false,
+});
 const AddPost = () => {
   const router = useRouter();
   const [startdone, isStartDone] = useState(false);
