@@ -26,7 +26,7 @@ export default function Home() {
           </button>
         </Link>
       </main>
-       {/* <Testimonials/> */}
+      {/* <Testimonials/> */}
       <Footer />
     </>
   );

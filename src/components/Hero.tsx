@@ -5,10 +5,9 @@ const Hero = () => {
   return (
     <div className="-z-10 fixed top-4 -full h-screen">
       <Image
-        src={"/Landing_bg2.gif"}
+        src={"/landing_bg2.gif"}
         alt="Hero"
-        height={1000}
-        width={1000}
+        fill
         objectFit="contain"
         unoptimized
         className="-z-10 fixed top-4 h-screen"
