@@ -95,10 +95,10 @@ const AddPost = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center mx-auto">
+    <div className="w-full h-screen flex flex-col justify-center items-center mx-auto my">
       {!startdone ? (
-        <div className="md:w-[50%] w-[85%] h-[80%] md:h-[85%]">
-          <div className="bg-gray-100 rounded-lg p-8 flex flex-col md:m-auto w-full h-full md:mt-0">
+        <div className="md:w-[50%] w-[85%] h-fit my-10">
+          <div className="bg-gray-100 rounded-lg p-8 flex flex-col w-full h-fit my-10 mt-36">
             <div className="relative mb-4">
               <label
                 htmlFor="title"
@@ -159,16 +159,16 @@ const AddPost = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                    <SelectItem value="pineappl">Pineapple</SelectItem>
-                    <SelectItem value="pineapp">Pineapple</SelectItem>
-                    <SelectItem value="pineap">Pineapple</SelectItem>
-                    <SelectItem value="pine">Pineapple</SelectItem>
-                    <SelectItem value="pi">Pineapple</SelectItem>
+                    <SelectItem value="Technology">Technology</SelectItem>
+                    <SelectItem value="Design">Design</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Cullinary Art">Cullinary Art</SelectItem>
+                    <SelectItem value="Fashion">Fashion</SelectItem>
+                    <SelectItem value="Music">Music</SelectItem>
+                    <SelectItem value="Sports Technology">Sports Technology</SelectItem>
+                    <SelectItem value="Fitness">Fitness</SelectItem>
+                    <SelectItem value="Health">Health</SelectItem>
+                    <SelectItem value="Social Work">Social Work</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
