@@ -3,9 +3,19 @@
 import React, { useState, useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 
-const Content = ({ onContentChange }) => {
-  const [content, setContent] = useState("");
-  const editorRef = useRef(null);
+interface ContentProps {
+  onContentChange: (content: string) => void;
+}
+
+interface UploaderResponse {
+  data?: {
+    id: string;
+  };
+}
+
+const Content: React.FC<ContentProps> = ({ onContentChange }) => {
+  const [content, setContent] = useState<string>("");
+  const editorRef = useRef<any>(null);
 
   const config = useMemo(
     () => ({
@@ -16,21 +26,23 @@ const Content = ({ onContentChange }) => {
         url: "http://localhost:8055/files",
         format: "json",
         method: "POST",
-        prepareData: (formData) => {
+        prepareData: (formData: FormData) => {
           const file = formData.get("files[0]");
           formData.delete("files[0]");
-          formData.append("file", file);
+          if (file instanceof File) {
+            formData.append("file", file);
+          }
           return formData;
         },
-        isSuccess: (resp) => {
+        isSuccess: (resp: UploaderResponse) => {
           return resp && resp.data && resp.data.id;
         },
-        getMsg: (resp) => {
+        getMsg: (resp: UploaderResponse) => {
           return resp && resp.data
             ? "File uploaded successfully"
             : "Upload failed";
         },
-        process: (resp) => {
+        process: (resp: UploaderResponse) => {
           if (resp && resp.data && resp.data.id) {
             const fileUrl = `http://localhost:8055/assets/${resp.data.id}`;
             return {
@@ -42,24 +54,26 @@ const Content = ({ onContentChange }) => {
           }
           return resp;
         },
-        defaultHandlerError: (e) => {
+        defaultHandlerError: (e: unknown) => {
           console.error("Upload error:", e);
         },
-        defaultHandlerSuccess: function (data, resp) {
-          var i,
-            field = "files";
-          if (data[field] && data[field].length) {
-            for (i = 0; i < data[field].length; i += 1) {
-              this.s.insertImage(data[field][i]);
+        defaultHandlerSuccess: function (
+          this: any,
+          data: { files?: string[] },
+          resp: unknown
+        ) {
+          if (data.files && data.files.length) {
+            for (let i = 0; i < data.files.length; i += 1) {
+              this.s.insertImage(data.files[i]);
             }
           }
         },
       },
     }),
-    [],
+    []
   );
 
-  const handleContentChange = (newContent) => {
+  const handleContentChange = (newContent: string) => {
     setContent(newContent);
     onContentChange(newContent);
   };
