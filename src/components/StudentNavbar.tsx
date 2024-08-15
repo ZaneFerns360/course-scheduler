@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { checkUsername } from "@/lib/getUser";
 import {
   ChevronDown,
   ChevronRight,
@@ -91,13 +92,20 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null);
 
-  const [rollNumber, setRollNumber] = useState("admin");
+  const [rollNumber, setRollNumber] = useState("user");
 
   useEffect(() => {
-    const storedRollNumber = sessionStorage.getItem("rollNumber");
-    if (storedRollNumber) {
-      setRollNumber(storedRollNumber);
-    }
+    const fetchUsername = async () => {
+      try {
+        const username = await checkUsername();
+        setRollNumber(username || "user");
+      } catch (error) {
+        console.error("Error fetching username:", error);
+        setRollNumber("user");
+      }
+    };
+
+    fetchUsername();
   }, []);
 
   const handleDropdown = (menu: string) => {

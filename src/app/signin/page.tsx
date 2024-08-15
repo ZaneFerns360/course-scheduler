@@ -4,28 +4,39 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { directusLogin } from "@/lib/auth";
 
 const Page = () => {
   const [isStudent, setIsStudent] = useState(true);
-  const [rollNumber, setRollNumber] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   function checkIfTeacher() {
     setIsStudent(!isStudent);
+    setIdentifier("");
   }
 
-  function handleSignIn(e: { preventDefault: () => void }) {
+  async function handleSignIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    sessionStorage.setItem("rollNumber", rollNumber);
-    sessionStorage.setItem("password", password);
-    if (isStudent) {
-      router.push("/home/home-page");
-    } else {
-      router.push("/home/my-blogs");
+    setError("");
+
+    try {
+      const user = await directusLogin({ identifier, password });
+      console.log("Login successful:", user);
+
+      // Redirect based on the isStudent state
+      if (isStudent) {
+        router.push("/home/home-page");
+      } else {
+        router.push("/home/my-blogs");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setError("Invalid credentials. Please try again.");
     }
   }
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100">
       <motion.div
@@ -39,21 +50,27 @@ const Page = () => {
         </h2>
         <form onSubmit={handleSignIn} className="space-y-6">
           <div>
-            <label htmlFor="roll-number" className="text-sm font-medium text-gray-700 block mb-2">
+            <label
+              htmlFor="identifier"
+              className="text-sm font-medium text-gray-700 block mb-2"
+            >
               {isStudent ? "Roll Number" : "Employee ID"}
             </label>
             <input
               type="text"
-              id="roll-number"
-              name="roll-number"
-              value={rollNumber}
-              onChange={(e) => setRollNumber(e.target.value)}
+              id="identifier"
+              name="identifier"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="text-sm font-medium text-gray-700 block mb-2">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-700 block mb-2"
+            >
               Password
             </label>
             <input
@@ -66,6 +83,7 @@ const Page = () => {
               required
             />
           </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -82,8 +100,11 @@ const Page = () => {
           <Switch onCheckedChange={checkIfTeacher} />
         </div>
         <p className="mt-8 text-xs text-center text-gray-500">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-indigo-600 hover:text-indigo-500">
+          Don&apost have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-indigo-600 hover:text-indigo-500"
+          >
             Sign up here
           </Link>
         </p>
