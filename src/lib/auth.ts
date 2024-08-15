@@ -44,7 +44,7 @@ export const directusLogin = async (
     }
 
     // Handle cookies
-    const formattedData = JSON.stringify(user);
+    const formattedData = user.data.access_token;
     cookies().set(COOKIE_NAME, formattedData);
     cookies().set(USERNAME, credentials.identifier);
 

@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { getauth } from "@/lib/getAuth";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -49,6 +50,8 @@ const AddPost = () => {
   async function handleSubmit(e: any) {
     e.preventDefault();
     try {
+      const authToken = await getauth();
+      console.log(authToken);
       let imageId = null;
       if (file) {
         const formData = new FormData();
@@ -79,6 +82,7 @@ const AddPost = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Add auth token to post submission
         },
         body: JSON.stringify(postData),
       });
@@ -120,15 +124,22 @@ const AddPost = () => {
             </h2>
             <div className="mb-8">
               <div className="flex items-center">
-                <div className={`w-1/2 h-1 ${step === 1 ? 'bg-indigo-600' : 'bg-gray-200'}`}></div>
-                <div className={`w-1/2 h-1 ${step === 2 ? 'bg-indigo-600' : 'bg-gray-200'}`}></div>
+                <div
+                  className={`w-1/2 h-1 ${step === 1 ? "bg-indigo-600" : "bg-gray-200"}`}
+                ></div>
+                <div
+                  className={`w-1/2 h-1 ${step === 2 ? "bg-indigo-600" : "bg-gray-200"}`}
+                ></div>
               </div>
             </div>
             {step === 1 ? (
               <form>
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Title
                     </label>
                     <input
@@ -142,7 +153,10 @@ const AddPost = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="description"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Description
                     </label>
                     <textarea
@@ -156,7 +170,10 @@ const AddPost = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="file"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Upload Image
                     </label>
                     <input
@@ -172,13 +189,28 @@ const AddPost = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Select a Course
                     </label>
-                    <Select onValueChange={(value) => setPost({ ...post, courseName: value })}>
+                    <Select
+                      onValueChange={(value) =>
+                        setPost({ ...post, courseName: value })
+                      }
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a Course" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {["Technology", "Design", "Marketing", "Culinary Art", "Fashion", "Music", "Sports Technology", "Fitness", "Health", "Social Work"].map((course) => (
+                          {[
+                            "Technology",
+                            "Design",
+                            "Marketing",
+                            "Culinary Art",
+                            "Fashion",
+                            "Music",
+                            "Sports Technology",
+                            "Fitness",
+                            "Health",
+                            "Social Work",
+                          ].map((course) => (
                             <SelectItem key={course} value={course}>
                               {course}
                             </SelectItem>
