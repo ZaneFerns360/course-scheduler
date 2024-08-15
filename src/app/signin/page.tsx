@@ -3,6 +3,7 @@ import { Switch } from "@/components/Toggle";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const Page = () => {
   const [isStudent, setIsStudent] = useState(true);
@@ -11,17 +12,13 @@ const Page = () => {
   const router = useRouter();
 
   function checkIfTeacher() {
-    setIsStudent(false);
+    setIsStudent(!isStudent);
   }
 
   function handleSignIn(e: { preventDefault: () => void }) {
     e.preventDefault();
-
-    // Store roll number and password in session storage
     sessionStorage.setItem("rollNumber", rollNumber);
     sessionStorage.setItem("password", password);
-
-    // Navigate based on user type
     if (isStudent) {
       router.push("/home/home-page");
     } else {
@@ -30,61 +27,68 @@ const Page = () => {
   }
 
   return (
-    <>
-      <div className="flex justify-center items-center mx-auto min-w-[100vw] h-screen">
-        <div className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col mt-10 md:mt-0">
-          <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
-            Sign Up
-          </h2>
-          <form onSubmit={handleSignIn}>
-            <div className="relative mb-4">
-              <label
-                htmlFor="roll-number"
-                className="leading-7 text-sm text-gray-600"
-              >
-                Roll Number
-              </label>
-              <input
-                type="text"
-                id="roll-number"
-                name="roll-number"
-                value={rollNumber}
-                onChange={(e) => setRollNumber(e.target.value)}
-                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-            <div className="relative mb-4">
-              <label
-                htmlFor="password"
-                className="leading-7 text-sm text-gray-600"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-            <button
-              type="submit"
-              className="text-white w-full mt-3 bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-            >
-              Submit
-            </button>
-          </form>
-          <div className="flex flex-row mt-3 ">
-            <Switch onCheckedChange={checkIfTeacher} />
-            <h2 className="pl-2 text-gray-900 text-lg font-medium title-font -translate-y-[3px]">
-              Teachers
-            </h2>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 m-4"
+      >
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          {isStudent ? "Student Sign In" : "Teacher Sign In"}
+        </h2>
+        <form onSubmit={handleSignIn} className="space-y-6">
+          <div>
+            <label htmlFor="roll-number" className="text-sm font-medium text-gray-700 block mb-2">
+              {isStudent ? "Roll Number" : "Employee ID"}
+            </label>
+            <input
+              type="text"
+              id="roll-number"
+              name="roll-number"
+              value={rollNumber}
+              onChange={(e) => setRollNumber(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
           </div>
+          <div>
+            <label htmlFor="password" className="text-sm font-medium text-gray-700 block mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="submit"
+            className="w-full bg-indigo-600 text-white rounded-md py-2 px-4 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300"
+          >
+            Sign In
+          </motion.button>
+        </form>
+        <div className="mt-6 flex items-center justify-between">
+          <span className="text-sm text-gray-600">
+            {isStudent ? "Are you a teacher?" : "Are you a student?"}
+          </span>
+          <Switch onCheckedChange={checkIfTeacher} />
         </div>
-      </div>
-    </>
+        <p className="mt-8 text-xs text-center text-gray-500">
+          Don't have an account?{" "}
+          <Link href="/signup" className="text-indigo-600 hover:text-indigo-500">
+            Sign up here
+          </Link>
+        </p>
+      </motion.div>
+    </div>
   );
 };
 
