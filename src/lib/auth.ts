@@ -4,6 +4,7 @@
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "auth_token";
+const REFRESH = "refresh_token";
 const USERNAME = "username";
 
 interface Credentials {
@@ -47,6 +48,7 @@ export const directusLogin = async (
     const formattedData = user.data.access_token;
     cookies().set(COOKIE_NAME, formattedData);
     cookies().set(USERNAME, credentials.identifier);
+    cookies().set(REFRESH, user.data.refresh_token);
 
     return user;
   } catch (error) {

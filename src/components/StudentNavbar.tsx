@@ -19,6 +19,7 @@ import {
   Award,
   FlaskConical,
   BadgeCheck,
+  LogOut,
   Library,
 } from "lucide-react";
 
@@ -188,6 +189,11 @@ const Navbar: React.FC = () => {
                   <Users size={20} />
                   <span>{rollNumber}</span>
                 </div>
+                <Link href={"/logout"}>
+                  <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
+                    <LogOut size={20} />
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
