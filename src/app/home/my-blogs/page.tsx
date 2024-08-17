@@ -1,7 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Eye, MessageCircle, CheckCircle } from "lucide-react";
 import { getauth } from "@/lib/getAuth";
+import { isTeacherCookieValid } from "@/lib/isTeacher";
+import { useRouter } from "next/navigation";
 
 interface Post {
   id: number;
@@ -116,9 +118,17 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
 const Page = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const categories = ["All", "Technology", "Design", "Marketing"];
+  const router = useRouter();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchPosts = async () => {
+      const isTeacher = await isTeacherCookieValid();
+
+      if (!isTeacher) {
+        router.push("/");
+        return;
+      }
+
       try {
         const authToken = await getauth();
         const response = await fetch("http://localhost:8055/items/posts", {
@@ -148,7 +158,7 @@ const Page = () => {
       }
     };
     fetchPosts();
-  }, []);
+  }, [router]);
 
   return (
     <div>
