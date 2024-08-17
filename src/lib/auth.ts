@@ -67,8 +67,8 @@ export const directusLogin = async (
     // Generate and encrypt a token
     const encryptedToken: string = await generateToken();
     // Handle cookies
-    cookies().set(COOKIE_NAME, encryptedToken);
-
+    const formattedData = user.data.access_token;
+    cookies().set(COOKIE_NAME, formattedData);
     cookies().set(USERNAME, credentials.identifier);
     cookies().set(REFRESH, user.data.refresh_token);
 

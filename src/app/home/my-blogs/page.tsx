@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Eye, MessageCircle, CheckCircle } from "lucide-react";
+import { getauth } from "@/lib/getAuth";
 
 interface Post {
   id: number;
@@ -29,10 +30,13 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
       prevPosts.map((post) => (post.id === id ? { ...post, valid } : post))
     );
     try {
+      const authToken = await getauth();
+
       const response = await fetch(`http://localhost:8055/items/posts/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ valid }),
       });
@@ -116,7 +120,12 @@ const Page = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:8055/items/posts");
+        const authToken = await getauth();
+        const response = await fetch("http://localhost:8055/items/posts", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
         }
