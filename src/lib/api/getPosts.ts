@@ -10,15 +10,27 @@ interface Post {
   valid: boolean;
   user: string;
   courseName: string;
+  description: string;
+  content: string;
 }
 
-export async function fetchPosts(courseName?: string): Promise<Post[]> {
-  "use server";
+export async function fetchPosts(
+  courseName?: string,
+  valid?: boolean,
+): Promise<Post[]> {
   const authToken = await getauth();
   let url = "http://localhost:8055/items/posts";
+  const filters = [];
 
   if (courseName) {
-    url += `?filter[courseName]=${courseName}`;
+    filters.push(`filter[courseName][_eq]=${encodeURIComponent(courseName)}`);
+  }
+  if (valid !== undefined) {
+    filters.push(`filter[valid][_eq]=${valid}`);
+  }
+
+  if (filters.length > 0) {
+    url += `?${filters.join("&")}`;
   }
 
   const response = await fetch(url, {
@@ -33,11 +45,13 @@ export async function fetchPosts(courseName?: string): Promise<Post[]> {
   }
 
   const data = await response.json();
+
   return data.data.map((post: any) => ({
     id: post.id,
     title: post.title,
     courseName: post.courseName || "Uncategorized",
-    excerpt: post.description,
+    description: post.description || "",
+    content: post.content || "",
     imageUrl: post.image
       ? `http://localhost:8055/assets/${post.image}`
       : "https://via.placeholder.com/150",
