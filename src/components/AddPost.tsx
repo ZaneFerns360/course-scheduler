@@ -79,6 +79,7 @@ const AddPost = () => {
         content: post.content,
         image: imageId,
         user: username,
+        courseName: post.courseName,
       };
 
       const response = await fetch("http://localhost:8055/items/posts", {

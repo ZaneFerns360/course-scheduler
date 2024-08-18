@@ -1,32 +1,40 @@
 "use client";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useCallback, useLayoutEffect } from "react";
 import { Eye, MessageCircle, CheckCircle } from "lucide-react";
 import { getauth } from "@/lib/getAuth";
 import { isTeacherCookieValid } from "@/lib/isTeacher";
 import { useRouter } from "next/navigation";
 import { updatePostStatusOnServer } from "@/lib/api/updatePosts";
 import { fetchPosts } from "@/lib/api/getPosts";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
 
 interface Post {
   id: number;
   title: string;
-  category: string;
   imageUrl: string;
   views: number;
   comment: number;
   valid: boolean;
   user: string;
+  courseName: string;
 }
 
 interface BlogDisplayCardProps {
   posts: Post[];
-  categories: string[];
+  courseNames: string[];
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
 }
 
 const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
   posts,
-  categories,
+  courseNames,
   setPosts,
 }) => {
   const updateLocalPostStatus = (id: number, valid: boolean) => {
@@ -41,7 +49,6 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
       await updatePostStatusOnServer(id, valid);
     } catch (error) {
       console.error("Error updating post status:", error);
-      // Optionally, you could revert the local state here if the server update fails
     }
   };
 
@@ -70,7 +77,8 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
                 <p className="text-gray-700 mb-4">{post.user}</p>
                 <p className="text-gray-600 mb-2">
-                  Category: <span className="font-medium">{post.category}</span>
+                  Course Name:{" "}
+                  <span className="font-medium">{post.courseName}</span>
                 </p>
                 <div className="flex items-center text-gray-600 mb-2">
                   <Eye className="w-5 h-5 mr-2" />
@@ -111,8 +119,32 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
 
 const Page = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const categories = ["All", "Technology", "Design", "Marketing"];
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const courseNames = [
+    "All",
+    "Technology",
+    "Design",
+    "Marketing",
+    "Culinary Art",
+    "Fashion",
+    "Music",
+    "Sports Technology",
+    "Fitness",
+    "Health",
+    "Social Work",
+  ];
   const router = useRouter();
+
+  const handleFetchPosts = useCallback(async () => {
+    try {
+      const fetchedPosts = await fetchPosts(
+        selectedCourse !== "All" && selectedCourse ? selectedCourse : undefined,
+      );
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  }, [selectedCourse]);
 
   useLayoutEffect(() => {
     const loadPosts = async () => {
@@ -121,20 +153,37 @@ const Page = () => {
         router.push("/");
         return;
       }
-      try {
-        const fetchedPosts = await fetchPosts();
-        setPosts(fetchedPosts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
+      handleFetchPosts();
     };
     loadPosts();
-  }, [router]);
+  }, [router, handleFetchPosts]);
   return (
-    <div>
+    <div className="mt-24">
+      <div className="p-4">
+        <Select onValueChange={(value) => setSelectedCourse(value)}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a Course" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {courseNames.map((course) => (
+                <SelectItem key={course} value={course}>
+                  {course}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <button
+          onClick={handleFetchPosts}
+          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+        >
+          Fetch
+        </button>
+      </div>
       <BlogDisplayCard
         posts={posts}
-        categories={categories}
+        courseNames={courseNames}
         setPosts={setPosts}
       />
     </div>
