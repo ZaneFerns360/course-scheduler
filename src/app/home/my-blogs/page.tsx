@@ -4,16 +4,18 @@ import { Eye, MessageCircle, CheckCircle } from "lucide-react";
 import { getauth } from "@/lib/getAuth";
 import { isTeacherCookieValid } from "@/lib/isTeacher";
 import { useRouter } from "next/navigation";
+import { updatePostStatusOnServer } from "@/lib/api/updatePosts";
+import { fetchPosts } from "@/lib/api/getPosts";
 
 interface Post {
   id: number;
   title: string;
   category: string;
-  excerpt: string;
   imageUrl: string;
   views: number;
   comment: number;
   valid: boolean;
+  user: string;
 }
 
 interface BlogDisplayCardProps {
@@ -27,27 +29,19 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
   categories,
   setPosts,
 }) => {
-  const updatePostStatus = async (id: number, valid: boolean) => {
+  const updateLocalPostStatus = (id: number, valid: boolean) => {
     setPosts((prevPosts) =>
-      prevPosts.map((post) => (post.id === id ? { ...post, valid } : post))
+      prevPosts.map((post) => (post.id === id ? { ...post, valid } : post)),
     );
+  };
+
+  const updatePostStatus = async (id: number, valid: boolean) => {
+    updateLocalPostStatus(id, valid);
     try {
-      const authToken = await getauth();
-
-      const response = await fetch(`http://localhost:8055/items/posts/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ valid }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update post");
-      }
+      await updatePostStatusOnServer(id, valid);
     } catch (error) {
       console.error("Error updating post status:", error);
+      // Optionally, you could revert the local state here if the server update fails
     }
   };
 
@@ -74,7 +68,7 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
               />
               <div className="p-4 flex-grow">
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-700 mb-4">{post.excerpt}</p>
+                <p className="text-gray-700 mb-4">{post.user}</p>
                 <p className="text-gray-600 mb-2">
                   Category: <span className="font-medium">{post.category}</span>
                 </p>
@@ -121,45 +115,21 @@ const Page = () => {
   const router = useRouter();
 
   useLayoutEffect(() => {
-    const fetchPosts = async () => {
+    const loadPosts = async () => {
       const isTeacher = await isTeacherCookieValid();
-
       if (!isTeacher) {
         router.push("/");
         return;
       }
-
       try {
-        const authToken = await getauth();
-        const response = await fetch("http://localhost:8055/items/posts", {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-        const data = await response.json();
-        const transformedPosts: Post[] = data.data.map((post: any) => ({
-          id: post.id,
-          title: post.title,
-          category: post.category || "Uncategorized",
-          excerpt: post.description,
-          imageUrl: post.image
-            ? `http://localhost:8055/assets/${post.image}`
-            : "https://via.placeholder.com/150",
-          views: post.views || 0,
-          comment: post.comments || 0,
-          valid: post.valid ?? false,
-        }));
-        setPosts(transformedPosts);
+        const fetchedPosts = await fetchPosts();
+        setPosts(fetchedPosts);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
     };
-    fetchPosts();
+    loadPosts();
   }, [router]);
-
   return (
     <div>
       <BlogDisplayCard

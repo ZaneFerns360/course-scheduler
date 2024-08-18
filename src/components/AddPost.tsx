@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { getauth } from "@/lib/getAuth";
+import { checkUsername } from "@/lib/getUser";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -51,6 +52,7 @@ const AddPost = () => {
     e.preventDefault();
     try {
       const authToken = await getauth();
+      const username = await checkUsername();
       console.log(authToken);
       let imageId = null;
       if (file) {
@@ -76,6 +78,7 @@ const AddPost = () => {
         description: post.description,
         content: post.content,
         image: imageId,
+        user: username,
       };
 
       const response = await fetch("http://localhost:8055/items/posts", {
@@ -162,7 +165,7 @@ const AddPost = () => {
                     <textarea
                       id="description"
                       name="description"
-                      rows="4"
+                      rows={4}
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
                       placeholder="Write your description here which will be visible on the thumbnail..."
                       onChange={handleChange}
