@@ -2,8 +2,9 @@
 import { motion } from "framer-motion";
 import { getauth } from "@/lib/getAuth";
 import { checkUsername } from "@/lib/getUser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { fetchCourses } from "@/lib/api/getCourses";
 import Link from "next/link";
 import {
   Select,
@@ -23,6 +24,7 @@ const AddPost = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
   const [startdone, isStartDone] = useState(false);
+  const [courses, setCourses] = useState<{ id: number; name: string }[]>([]);
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -30,6 +32,19 @@ const AddPost = () => {
     courseName: "",
   });
   const [file, setFile] = useState(null);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const fetchedCourses = await fetchCourses();
+        setCourses(fetchedCourses);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      }
+    };
+
+    loadCourses();
+  }, []);
 
   function checkIfStartDone(e: any) {
     e.preventDefault();
@@ -62,6 +77,9 @@ const AddPost = () => {
         const imageResponse = await fetch("http://localhost:8055/files", {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: `bearer ${authToken}`,
+          },
         });
 
         if (imageResponse.ok) {
@@ -189,6 +207,7 @@ const AddPost = () => {
                       className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition duration-150 ease-in-out"
                     />
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Select a Course
@@ -203,20 +222,9 @@ const AddPost = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {[
-                            "Technology",
-                            "Design",
-                            "Marketing",
-                            "Culinary Art",
-                            "Fashion",
-                            "Music",
-                            "Sports Technology",
-                            "Fitness",
-                            "Health",
-                            "Social Work",
-                          ].map((course) => (
-                            <SelectItem key={course} value={course}>
-                              {course}
+                          {courses.map((course) => (
+                            <SelectItem key={course.id} value={course.name}>
+                              {course.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>

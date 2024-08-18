@@ -1,7 +1,7 @@
 "use client";
-
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import JoditEditor from "jodit-react";
+import { getauth } from "@/lib/getAuth";
 
 interface ContentProps {
   onContentChange: (content: string) => void;
@@ -16,6 +16,15 @@ interface UploaderResponse {
 const Content: React.FC<ContentProps> = ({ onContentChange }) => {
   const [content, setContent] = useState<string>("");
   const editorRef = useRef<any>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAuthToken = async () => {
+      const token = await getauth();
+      setAuthToken(token);
+    };
+    fetchAuthToken();
+  }, []);
 
   const config = useMemo(
     () => ({
@@ -26,6 +35,9 @@ const Content: React.FC<ContentProps> = ({ onContentChange }) => {
         url: "http://localhost:8055/files",
         format: "json",
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
         prepareData: (formData: FormData) => {
           const file = formData.get("files[0]");
           formData.delete("files[0]");
@@ -60,7 +72,7 @@ const Content: React.FC<ContentProps> = ({ onContentChange }) => {
         defaultHandlerSuccess: function (
           this: any,
           data: { files?: string[] },
-          resp: unknown
+          resp: unknown,
         ) {
           if (data.files && data.files.length) {
             for (let i = 0; i < data.files.length; i += 1) {
@@ -70,7 +82,7 @@ const Content: React.FC<ContentProps> = ({ onContentChange }) => {
         },
       },
     }),
-    []
+    [authToken],
   );
 
   const handleContentChange = (newContent: string) => {

@@ -1,11 +1,17 @@
 "use client";
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+} from "react";
 import { Eye, MessageCircle, CheckCircle } from "lucide-react";
 import { getauth } from "@/lib/getAuth";
 import { isTeacherCookieValid } from "@/lib/isTeacher";
 import { useRouter } from "next/navigation";
 import { updatePostStatusOnServer } from "@/lib/api/updatePosts";
 import { fetchPosts } from "@/lib/api/getPosts";
+import { fetchCourses } from "@/lib/api/getCourses";
 import {
   Select,
   SelectContent,
@@ -28,7 +34,7 @@ interface Post {
 
 interface BlogDisplayCardProps {
   posts: Post[];
-  courseNames: string[];
+  courseNames: { id: number; name: string }[];
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
 }
 
@@ -119,21 +125,21 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
 
 const Page = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [courses, setCourses] = useState<{ id: number; name: string }[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const courseNames = [
-    "All",
-    "Technology",
-    "Design",
-    "Marketing",
-    "Culinary Art",
-    "Fashion",
-    "Music",
-    "Sports Technology",
-    "Fitness",
-    "Health",
-    "Social Work",
-  ];
   const router = useRouter();
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const fetchedCourses = await fetchCourses();
+        setCourses(fetchedCourses);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      }
+    };
+    loadCourses();
+  }, []);
 
   const handleFetchPosts = useCallback(async () => {
     try {
@@ -157,6 +163,7 @@ const Page = () => {
     };
     loadPosts();
   }, [router, handleFetchPosts]);
+
   return (
     <div className="mt-24">
       <div className="p-4">
@@ -166,9 +173,12 @@ const Page = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {courseNames.map((course) => (
-                <SelectItem key={course} value={course}>
-                  {course}
+              <SelectItem key="All" value="All">
+                All
+              </SelectItem>
+              {courses.map((course) => (
+                <SelectItem key={course.id} value={course.name}>
+                  {course.name}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -183,7 +193,7 @@ const Page = () => {
       </div>
       <BlogDisplayCard
         posts={posts}
-        courseNames={courseNames}
+        courseNames={courses}
         setPosts={setPosts}
       />
     </div>
