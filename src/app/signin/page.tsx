@@ -93,14 +93,8 @@ const Page = () => {
             Sign In
           </motion.button>
         </form>
-        <div className="mt-6 flex items-center justify-between">
-          <span className="text-sm text-gray-600">
-            {isStudent ? "Are you a teacher?" : "Are you a student?"}
-          </span>
-          <Switch onCheckedChange={checkIfTeacher} />
-        </div>
         <p className="mt-8 text-xs text-center text-gray-500">
-          Don&apost have an account?{" "}
+          Don't have an account?
           <Link
             href="/signup"
             className="text-indigo-600 hover:text-indigo-500"

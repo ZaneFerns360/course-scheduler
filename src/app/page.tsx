@@ -14,14 +14,21 @@ export default function Home() {
       <LoadingNavbar />
       <main className="relative bg-transparent flex-col min-h-screen w-full items-center justify-center">
         <Image
-          src="/Landing_bg.gif"
+          src="/Landing_bg2.gif"
           alt="Hero"
           height={10000}
           width={1000}
-          className="-z-10 w-full h-screen"
+          className="-z-10 w-full h-screen md:block hidden"
+        />
+        <Image
+          src="/mobileLandingbg.gif"
+          alt="Hero"
+          height={10000}
+          width={1000}
+          className="-z-10 w-full h-screen md:hidden"
         />
         <Link href={"/signin"}>
-          <button className=" border-2 rounded-full border-white  text-white absolute left-28 top-72 md:left-[43vw] md:top-64 bg-transparent px-10 py-4 text-4xl font-bold">
+          <button className=" border-2 rounded-full border-white  text-white absolute left-28 top-[500px] md:left-[43vw] md:top-80 hover:scale-110 duration-200 ease-in-out bg-transparent px-10 py-4 text-4xl font-bold">
             Get Started
           </button>
         </Link>
