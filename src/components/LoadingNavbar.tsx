@@ -161,43 +161,12 @@ const LoadingNavbar: React.FC = () => {
           </div>
 
           {/* Main Menu Items */}
-          <Link href={"/home/home-page"}>
+          <Link href={"/signin"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Home</span>
+              <span>Sign In</span>
             </button>
           </Link>
 
-          {Object.keys(dropdownContent).map((key) => (
-            <button
-              key={key}
-              onClick={() => openMobileSubmenu(key)}
-              className="flex items-center justify-between border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800"
-            >
-              <span>{key.replace(/([A-Z])/g, " $1").trim()}</span>
-              <ChevronRight size={20} />
-            </button>
-          ))}
-          <Link href={"/"}>
-            <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Testomonay</span>
-            </button>
-          </Link>
-          <Link href={"/home/my-blogs"}>
-            <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>My Blogs</span>
-            </button>
-          </Link>
-          <Link href={"/"}>
-            <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Contact</span>
-            </button>
-          </Link>
-          <Link href={"/new-post"}>
-            <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>New Post</span>
-              <ChevronRight size={20} />
-            </button>
-          </Link>
         </div>
       </div>
       {/* Mobile Submenu */}

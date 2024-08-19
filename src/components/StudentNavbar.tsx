@@ -142,37 +142,22 @@ const Navbar: React.FC = () => {
                 <Image
                   src="/clogo.png"
                   alt="SRM Logo"
-                  width={120}
-                  height={500}
-                  className="scale-x-125"
+                  width={10000}
+                  height={10000}
+                  className="scale-x-125 h-[100px] w-[200px]"
                 />
               </Link>
             </div>
-            <div className="flex w-3/4 flex-col pb-1.5">
-              <div className="flex justify-end space-x-8 py-4 pr-14 ">
+            <div className="flex w-3/4 pb-1.5">
+              <div className="flex justify-end items-center w-full space-x-8 py-4 pr-14 ">
                 <Link href={"/home/home-page"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>Home</span>
                   </button>
                 </Link>
-                {/* {Object.keys(dropdownContent).map((key) => (
-                  <button
-                    key={key}
-                    onClick={() => handleDropdown(key)}
-                    className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300"
-                  >
-                    <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                    <ChevronDown size={20} />
-                  </button>
-                ))}
-                <Link href={"#testomany"}>
-                  <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
-                    <span>Testomonay</span>
-                  </button>
-                </Link> */}
                 <Link href={"/home/my-blogs"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
-                    <span>My Blogs</span>
+                    <span>Blogs</span>
                   </button>
                 </Link>
                 <Link href={"#contact"}>
@@ -186,12 +171,12 @@ const Navbar: React.FC = () => {
                   </button>
                 </Link>
                 <div className="flex items-center space-x-2 text-lg">
-                  <Users size={20} />
+                  <Users size={27} />
                   <span>{rollNumber}</span>
                 </div>
                 <Link href={"/logout"}>
                   <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-                    <LogOut size={20} />
+                    <LogOut size={27} />
                   </button>
                 </Link>
               </div>
@@ -282,25 +267,9 @@ const Navbar: React.FC = () => {
               <span>Home</span>
             </button>
           </Link>
-
-          {Object.keys(dropdownContent).map((key) => (
-            <button
-              key={key}
-              onClick={() => openMobileSubmenu(key)}
-              className="flex items-center justify-between border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800"
-            >
-              <span>{key.replace(/([A-Z])/g, " $1").trim()}</span>
-              <ChevronRight size={20} />
-            </button>
-          ))}
-          <Link href={"/"}>
-            <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>Testomonay</span>
-            </button>
-          </Link>
           <Link href={"/home/my-blogs"}>
             <button className="flex items-center justify-between w-full border-b border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
-              <span>My Blogs</span>
+              <span>Blogs</span>
             </button>
           </Link>
           <Link href={"/"}>
@@ -311,7 +280,7 @@ const Navbar: React.FC = () => {
           <Link href={"/new-post"}>
             <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
               <span>New Post</span>
-              <ChevronRight size={20} />
+              <SquarePlus size={20} />
             </button>
           </Link>
         </div>

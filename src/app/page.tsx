@@ -21,7 +21,7 @@ export default function Home() {
           className="-z-10 w-full h-screen"
         />
         <Link href={"/signin"}>
-          <button className=" border-2 rounded-full border-white  text-white absolute left-[40vw] top-64 bg-transparent px-10 py-4 text-4xl font-bold">
+          <button className=" border-2 rounded-full border-white  text-white absolute left-28 top-72 md:left-[43vw] md:top-64 bg-transparent px-10 py-4 text-4xl font-bold">
             Get Started
           </button>
         </Link>
