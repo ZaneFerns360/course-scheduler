@@ -160,7 +160,7 @@ const Navbar: React.FC = () => {
                     <span>Blogs</span>
                   </button>
                 </Link>
-                <Link href={"#contact"}>
+                <Link href={"#"}>
                   <button className="flex items-center space-x-1 text-lg transition duration-300 hover:text-yellow-300">
                     <span>Contact</span>
                   </button>
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
                   <span>{rollNumber}</span>
                 </div>
                 <Link href={"/logout"}>
-                  <button className="flex items-center justify-between border-b w-full border-gray-700 py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
+                  <button className="flex items-center justify-between  py-3 pb-2 text-left text-lg font-medium transition-colors hover:bg-gray-800">
                     <LogOut size={27} />
                   </button>
                 </Link>

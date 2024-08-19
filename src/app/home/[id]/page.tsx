@@ -7,7 +7,7 @@ export default async function Page({ params }: { params: { id: number } }) {
   const post = await fetchSinglePost(params.id);
 
   return (
-    <div className="min-h-screen mt-20 bg-gray-100 py-16 w-full">
+    <div className="min-h-screen mt-32 px-6 md:px-0 md:mt-20 bg-gray-100 py-16 w-full">
       <article className="container mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
         {post.imageUrl && (
           <div className="relative h-80 w-full lg:h-96">

@@ -45,7 +45,7 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
 }) => {
   const updateLocalPostStatus = (id: number, valid: boolean) => {
     setPosts((prevPosts) =>
-      prevPosts.map((post) => (post.id === id ? { ...post, valid } : post)),
+      prevPosts.map((post) => (post.id === id ? { ...post, valid } : post))
     );
   };
 
@@ -58,12 +58,14 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
     }
   };
 
+  const router = useRouter();
+
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4 pt-20 text-center">
-        Posts to be approved
+      <h1 className="text-3xl font-bold mb-4 py-10 font-serif  text-center">
+        Posts To Be Approved
       </h1>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 ">
         {posts.length === 0 ? (
           <p className="text-lg">No posts available.</p>
         ) : (
@@ -77,9 +79,17 @@ const BlogDisplayCard: React.FC<BlogDisplayCardProps> = ({
               <img
                 src={post.imageUrl}
                 alt={post.title}
-                className="w-full h-48 object-cover"
+                className="w-full cursor-pointer h-48 object-cover"
+                onClick={() => {
+                  router.push(`${post.id}`);
+                }}
               />
-              <div className="p-4 flex-grow">
+              <div
+                className="p-4 cursor-pointer flex-grow"
+                onClick={() => {
+                  router.push(`${post.id}`);
+                }}
+              >
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
                 <p className="text-gray-700 mb-4">{post.user}</p>
                 <p className="text-gray-600 mb-2">
@@ -144,7 +154,7 @@ const Page = () => {
   const handleFetchPosts = useCallback(async () => {
     try {
       const fetchedPosts = await fetchPosts(
-        selectedCourse !== "All" && selectedCourse ? selectedCourse : undefined,
+        selectedCourse !== "All" && selectedCourse ? selectedCourse : undefined
       );
       setPosts(fetchedPosts);
     } catch (error) {
@@ -165,7 +175,7 @@ const Page = () => {
   }, [router, handleFetchPosts]);
 
   return (
-    <div className="mt-24">
+    <div className="mt-32">
       <div className="p-4">
         <Select onValueChange={(value) => setSelectedCourse(value)}>
           <SelectTrigger className="w-full">

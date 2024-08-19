@@ -28,7 +28,7 @@ export default function Home() {
           className="-z-10 w-full h-screen md:hidden"
         />
         <Link href={"/signin"}>
-          <button className=" border-2 rounded-full border-white  text-white absolute left-28 top-[500px] md:left-[43vw] md:top-80 hover:scale-110 duration-200 ease-in-out bg-transparent px-10 py-4 text-4xl font-bold">
+          <button className=" border-2 rounded-full border-white  text-white absolute left-[23vw] top-[50vh] md:left-[43vw] md:top-[40vh] hover:scale-110 duration-200 ease-in-out bg-transparent px-10 py-4 text-xl md:text-4xl font-bold">
             Get Started
           </button>
         </Link>
