@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { AlertCircle, Plus, X, Info } from "lucide-react";
+import { AlertCircle, Plus, X, Info, CheckCircle } from "lucide-react";
 import * as Select from "@radix-ui/react-select";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -177,7 +177,7 @@ const CourseSchedulingSystem: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">
         Student Course Scheduling System
       </h1>
 
@@ -222,130 +222,152 @@ const CourseSchedulingSystem: React.FC = () => {
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Available Courses</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.map((course) => (
-            <div key={course.id} className="bg-white p-4 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-2">{course.name}</h3>
-              <p className="text-sm text-gray-600 mb-2">{course.category}</p>
-              <button
-                onClick={() => addCourse(course.id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          {courses.map((course) => {
+            const isSelected = selectedCourses.some(
+              (c) => c.courseId === course.id,
+            );
+            return (
+              <div
+                key={course.id}
+                className={`p-4 rounded-lg shadow flex items-center justify-between ${
+                  isSelected
+                    ? "bg-green-100 border-green-500 border-2"
+                    : "bg-white"
+                }`}
               >
-                <Plus className="h-5 w-5" />
-              </button>
-            </div>
-          ))}
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">{course.name}</h3>
+                  <p className="text-sm text-gray-600">{course.category}</p>
+                </div>
+                <button
+                  onClick={() =>
+                    isSelected ? removeCourse(course.id) : addCourse(course.id)
+                  }
+                  className={`${
+                    isSelected
+                      ? "text-red-500 hover:text-red-700"
+                      : "text-green-500 hover:text-green-700"
+                  } focus:outline-none`}
+                >
+                  {isSelected ? <X /> : <Plus />}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Selected Courses</h2>
-        {selectedCourses.length === 0 ? (
-          <p className="text-gray-600">No courses selected.</p>
-        ) : (
-          <ul className="space-y-4">
-            {selectedCourses.map((selection, index) => {
-              const course = courses.find((c) => c.id === selection.courseId);
+      {selectedCourses.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Selected Courses</h2>
+          <ul className="list-none">
+            {selectedCourses.map((selectedCourse) => {
+              const course = courses.find(
+                (course) => course.id === selectedCourse.courseId,
+              );
               return (
                 <li
-                  key={selection.courseId}
-                  className="bg-white p-4 rounded-lg shadow flex items-center justify-between"
+                  key={selectedCourse.courseId}
+                  className="p-4 rounded-lg shadow mb-2 bg-white flex items-center justify-between"
                 >
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">
-                      {course?.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {course?.category}
-                    </p>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-gray-600">Preference:</span>
-                      <Select.Root
-                        value={selection.preference?.toString() || ""}
-                        onValueChange={(value) =>
-                          updatePreference(
-                            selection.courseId,
-                            parseInt(value) as 1 | 2 | 3,
-                          )
-                        }
-                      >
-                        <Select.Trigger className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                          <Select.Value placeholder="Select" />
-                          <Select.Icon>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10 3a1 1 0 00-.894.553l-6 11A1 1 0 004 16h12a1 1 0 00.894-1.447l-6-11A1 1 0 0010 3z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </Select.Icon>
-                        </Select.Trigger>
-                        <Select.Portal>
-                          <Select.Content className="z-10 bg-white rounded shadow-lg">
-                            <Select.Viewport className="p-2">
-                              <Select.Item value="1">
-                                <Select.ItemText>1</Select.ItemText>
-                              </Select.Item>
-                              <Select.Item value="2">
-                                <Select.ItemText>2</Select.ItemText>
-                              </Select.Item>
-                              <Select.Item value="3">
-                                <Select.ItemText>3</Select.ItemText>
-                              </Select.Item>
-                            </Select.Viewport>
-                          </Select.Content>
-                        </Select.Portal>
-                      </Select.Root>
-                    </div>
+                    <h3 className="text-lg font-semibold">{course?.name}</h3>
+                    <p className="text-sm text-gray-600">{course?.category}</p>
                   </div>
-                  <button
-                    onClick={() => removeCourse(selection.courseId)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none"
+                  <Select.Root
+                    onValueChange={(value) =>
+                      updatePreference(
+                        selectedCourse.courseId,
+                        parseInt(value) as 1 | 2 | 3,
+                      )
+                    }
+                    value={selectedCourse.preference?.toString() || ""}
                   >
-                    <X className="h-5 w-5" />
-                  </button>
+                    <Select.Trigger
+                      className={`border border-gray-300 p-2 rounded focus:outline-none ${
+                        selectedCourse.preference
+                          ? "text-gray-700"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      <Select.Value placeholder="Select Preference" />
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Content className="bg-white shadow-lg rounded p-1">
+                        <Select.Viewport>
+                          <Select.Item
+                            value="1"
+                            className="p-2 cursor-pointer hover:bg-gray-100 rounded"
+                          >
+                            <Select.ItemText>1st Preference</Select.ItemText>
+                          </Select.Item>
+                          <Select.Item
+                            value="2"
+                            className="p-2 cursor-pointer hover:bg-gray-100 rounded"
+                          >
+                            <Select.ItemText>2nd Preference</Select.ItemText>
+                          </Select.Item>
+                          <Select.Item
+                            value="3"
+                            className="p-2 cursor-pointer hover:bg-gray-100 rounded"
+                          >
+                            <Select.ItemText>3rd Preference</Select.ItemText>
+                          </Select.Item>
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
                 </li>
               );
             })}
           </ul>
-        )}
-      </div>
-
-      {error && (
-        <AlertDialog.Root open={!!error} onOpenChange={() => setError(null)}>
-          <AlertDialog.Portal>
-            <AlertDialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
-            <AlertDialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-              <AlertDialog.Title className="text-lg font-semibold text-red-600 flex items-center">
-                <AlertCircle className="h-5 w-5 mr-2" /> Error
-              </AlertDialog.Title>
-              <AlertDialog.Description className="mt-2 text-sm text-gray-700">
-                {error}
-              </AlertDialog.Description>
-              <div className="mt-4 flex justify-end">
-                <AlertDialog.Cancel
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
-                  onClick={() => setError(null)}
-                >
-                  Close
-                </AlertDialog.Cancel>
-              </div>
-            </AlertDialog.Content>
-          </AlertDialog.Portal>
-        </AlertDialog.Root>
+        </div>
       )}
 
-      <button
-        onClick={handleSubmit}
-        className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none"
-      >
-        Submit Courses
-      </button>
+      {error && (
+        <div className="mb-6">
+          <AlertDialog.Root>
+            <AlertDialog.Trigger asChild>
+              <button className="flex items-center text-red-600">
+                <AlertCircle className="mr-2 h-5 w-5" />
+                <span>{error}</span>
+              </button>
+            </AlertDialog.Trigger>
+            <AlertDialog.Portal>
+              <AlertDialog.Overlay className="bg-black bg-opacity-50 fixed inset-0" />
+              <AlertDialog.Content className="bg-white p-6 rounded-md shadow-lg fixed inset-0 max-w-sm mx-auto">
+                <AlertDialog.Title className="text-lg font-bold text-red-600 mb-4 flex items-center">
+                  <AlertCircle className="mr-2 h-6 w-6" />
+                  Error
+                </AlertDialog.Title>
+                <AlertDialog.Description className="text-sm text-gray-600">
+                  {error}
+                </AlertDialog.Description>
+                <div className="flex justify-end mt-4">
+                  <AlertDialog.Cancel asChild>
+                    <button
+                      onClick={() => setError(null)}
+                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                      Close
+                    </button>
+                  </AlertDialog.Cancel>
+                </div>
+              </AlertDialog.Content>
+            </AlertDialog.Portal>
+          </AlertDialog.Root>
+        </div>
+      )}
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+        >
+          <CheckCircle className="mr-2 h-5 w-5" />
+          Submit Courses
+        </button>
+      </div>
     </div>
   );
 };

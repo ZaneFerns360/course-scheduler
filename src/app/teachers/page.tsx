@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Info } from "lucide-react";
-import * as Select from "@radix-ui/react-select";
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 type Teacher = {
@@ -38,7 +36,7 @@ const TeacherSchedulingSystem: React.FC = () => {
   const [selectedActivityType, setSelectedActivityType] = useState<
     "lecture" | "meeting" | "paperCorrection"
   >("lecture");
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const isValidSchedule = (newSchedule: ScheduleItem[]): boolean => {
     const teacherSchedules = newSchedule.reduce(
@@ -50,6 +48,8 @@ const TeacherSchedulingSystem: React.FC = () => {
       {} as Record<string, ScheduleItem[]>,
     );
 
+    const errors: string[] = [];
+
     for (const teacherId in teacherSchedules) {
       const teacherSchedule = teacherSchedules[teacherId];
 
@@ -59,34 +59,31 @@ const TeacherSchedulingSystem: React.FC = () => {
             (item) => item.day === day && item.activityType === "lecture",
           ).length,
       );
+
       if (lecturesPerDay.some((count) => count > 4)) {
-        setError(`Teacher ${teacherId} has more than 4 lectures on a day.`);
-        return false;
+        errors.push(`Teacher ${teacherId} has more than 4 lectures on a day.`);
       }
 
       if (lecturesPerDay.some((count) => count < 3)) {
-        setError(`Teacher ${teacherId} has fewer than 3 lectures on a day.`);
-        return false;
+        errors.push(`Teacher ${teacherId} has fewer than 3 lectures on a day.`);
       }
 
       const meetingsPerWeek = teacherSchedule.filter(
         (item) => item.activityType === "meeting",
       ).length;
       if (meetingsPerWeek !== 1) {
-        setError(
-          `Teacher ${teacherId} does not have exactly 1 meeting per week.`,
+        errors.push(
+          `Teacher ${teacherId} must have exactly 1 meeting per week.`,
         );
-        return false;
       }
 
       const paperCorrectionsPerWeek = teacherSchedule.filter(
         (item) => item.activityType === "paperCorrection",
       ).length;
       if (paperCorrectionsPerWeek !== 2) {
-        setError(
-          `Teacher ${teacherId} does not have exactly 2 paper correction sessions per week.`,
+        errors.push(
+          `Teacher ${teacherId} must have exactly 2 paper correction sessions per week.`,
         );
-        return false;
       }
 
       const timeConflicts = teacherSchedule.some((item1, index) =>
@@ -98,12 +95,14 @@ const TeacherSchedulingSystem: React.FC = () => {
         ),
       );
       if (timeConflicts) {
-        setError(`Teacher ${teacherId} has a time conflict in their schedule.`);
-        return false;
+        errors.push(
+          `Teacher ${teacherId} has a time conflict in their schedule.`,
+        );
       }
     }
 
-    return true;
+    setErrorMessages(errors);
+    return errors.length === 0;
   };
 
   const handleScheduleActivity = () => {
@@ -113,7 +112,7 @@ const TeacherSchedulingSystem: React.FC = () => {
       !selectedTimeSlot ||
       !selectedActivityType
     ) {
-      setError("Please select all fields before scheduling.");
+      setErrorMessages(["Please fill in all fields before scheduling."]);
       return;
     }
 
@@ -124,20 +123,16 @@ const TeacherSchedulingSystem: React.FC = () => {
       activityType: selectedActivityType,
     };
 
-    const newSchedule = [...schedule, newScheduleItem];
+    setSchedule([...schedule, newScheduleItem]);
+    // Reset selections after adding the schedule item
+    setSelectedTeacher("");
+    setSelectedDay("");
+    setSelectedTimeSlot("");
+    setSelectedActivityType("lecture");
+  };
 
-    if (isValidSchedule(newSchedule)) {
-      setSchedule(newSchedule);
-      setError(null);
-      setSelectedTeacher("");
-      setSelectedDay("");
-      setSelectedTimeSlot("");
-      setSelectedActivityType("lecture");
-    } else {
-      setError(
-        "This scheduling conflicts with existing rules. Please try a different combination.",
-      );
-    }
+  const checkSchedule = () => {
+    isValidSchedule(schedule);
   };
 
   const getScheduleItemForSlot = (
@@ -163,6 +158,8 @@ const TeacherSchedulingSystem: React.FC = () => {
         return "bg-green-200 text-green-800";
       case "paperCorrection":
         return "bg-yellow-200 text-yellow-800";
+      default:
+        return "bg-gray-100";
     }
   };
 
@@ -208,6 +205,11 @@ const TeacherSchedulingSystem: React.FC = () => {
                                 }`}
                               >
                                 {timeSlot}
+                                {scheduleItem && (
+                                  <span className="block mt-1 text-xs">
+                                    {scheduleItem.activityType}
+                                  </span>
+                                )}
                               </div>
                             </Tooltip.Trigger>
                             <Tooltip.Portal>
@@ -248,157 +250,91 @@ const TeacherSchedulingSystem: React.FC = () => {
 
   const renderSchedulingForm = () => (
     <div className="mb-4 flex space-x-4 flex-wrap">
-      <Select.Root value={selectedTeacher} onValueChange={setSelectedTeacher}>
-        <Select.Trigger className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-white border border-gray-300 h-9 w-[200px]">
-          <Select.Value placeholder="Select a teacher" />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white rounded-md shadow-lg">
-            <Select.Viewport className="p-2">
-              {teachers.map((teacher) => (
-                <Select.Item
-                  key={teacher.id}
-                  value={teacher.id}
-                  className="relative flex items-center px-8 py-2 rounded-md text-sm text-gray-700 font-medium focus:bg-gray-100 cursor-default"
-                >
-                  <Select.ItemText>{teacher.name}</Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+      <select
+        value={selectedTeacher}
+        onChange={(e) => setSelectedTeacher(e.target.value)}
+        className="border border-gray-300 rounded h-9 px-2"
+      >
+        <option value="">Select a teacher</option>
+        {teachers.map((teacher) => (
+          <option key={teacher.id} value={teacher.id}>
+            {teacher.name}
+          </option>
+        ))}
+      </select>
 
-      <Select.Root value={selectedDay} onValueChange={setSelectedDay}>
-        <Select.Trigger className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-white border border-gray-300 h-9 w-[200px]">
-          <Select.Value placeholder="Select a day" />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white rounded-md shadow-lg">
-            <Select.Viewport className="p-2">
-              {days.map((day) => (
-                <Select.Item
-                  key={day}
-                  value={day}
-                  className="relative flex items-center px-8 py-2 rounded-md text-sm text-gray-700 font-medium focus:bg-gray-100 cursor-default"
-                >
-                  <Select.ItemText>{day}</Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+      <select
+        value={selectedDay}
+        onChange={(e) => setSelectedDay(e.target.value)}
+        className="border border-gray-300 rounded h-9 px-2"
+      >
+        <option value="">Select a day</option>
+        {days.map((day) => (
+          <option key={day} value={day}>
+            {day}
+          </option>
+        ))}
+      </select>
 
-      <Select.Root value={selectedTimeSlot} onValueChange={setSelectedTimeSlot}>
-        <Select.Trigger className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-white border border-gray-300 h-9 w-[200px]">
-          <Select.Value placeholder="Select a time slot" />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white rounded-md shadow-lg">
-            <Select.Viewport className="p-2">
-              {timeSlots.map((slot) => (
-                <Select.Item
-                  key={slot}
-                  value={slot}
-                  className="relative flex items-center px-8 py-2 rounded-md text-sm text-gray-700 font-medium focus:bg-gray-100 cursor-default"
-                >
-                  <Select.ItemText>{slot}</Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+      <select
+        value={selectedTimeSlot}
+        onChange={(e) => setSelectedTimeSlot(e.target.value)}
+        className="border border-gray-300 rounded h-9 px-2"
+      >
+        <option value="">Select a time slot</option>
+        {timeSlots.map((timeSlot) => (
+          <option key={timeSlot} value={timeSlot}>
+            {timeSlot}
+          </option>
+        ))}
+      </select>
 
-      <Select.Root
+      <select
         value={selectedActivityType}
-        onValueChange={(value) =>
+        onChange={(e) =>
           setSelectedActivityType(
-            value as "lecture" | "meeting" | "paperCorrection",
+            e.target.value as "lecture" | "meeting" | "paperCorrection",
           )
         }
+        className="border border-gray-300 rounded h-9 px-2"
       >
-        <Select.Trigger className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-white border border-gray-300 h-9 w-[200px]">
-          <Select.Value placeholder="Select activity type" />
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Content className="overflow-hidden bg-white rounded-md shadow-lg">
-            <Select.Viewport className="p-2">
-              {["lecture", "meeting", "paperCorrection"].map((type) => (
-                <Select.Item
-                  key={type}
-                  value={type}
-                  className="relative flex items-center px-8 py-2 rounded-md text-sm text-gray-700 font-medium focus:bg-gray-100 cursor-default"
-                >
-                  <Select.ItemText>{type}</Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+        <option value="lecture">Lecture</option>
+        <option value="meeting">Meeting</option>
+        <option value="paperCorrection">Paper Correction</option>
+      </select>
 
       <button
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleScheduleActivity}
-        className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
       >
-        Schedule Activity
+        Add Activity
+      </button>
+
+      <button
+        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+        onClick={checkSchedule}
+      >
+        Check Schedule
       </button>
     </div>
   );
 
-  const renderErrorAlert = () =>
-    error ? (
-      <AlertDialog.Root>
-        <AlertDialog.Trigger asChild>
-          <div className="flex items-center text-red-600 cursor-pointer">
-            <Info className="w-4 h-4 mr-1" />
-            {error}
-          </div>
-        </AlertDialog.Trigger>
-        <AlertDialog.Portal>
-          <AlertDialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-          <AlertDialog.Content className="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-md p-4 max-w-md mx-auto shadow-lg">
-            <AlertDialog.Title className="text-lg font-medium text-gray-900">
-              Error
-            </AlertDialog.Title>
-            <AlertDialog.Description className="mt-2 text-sm text-gray-600">
-              {error}
-            </AlertDialog.Description>
-            <div className="mt-4 flex justify-end">
-              <AlertDialog.Action asChild>
-                <button className="inline-flex items-center justify-center rounded px-4 py-2 text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 focus:outline-none">
-                  Close
-                </button>
-              </AlertDialog.Action>
-            </div>
-          </AlertDialog.Content>
-        </AlertDialog.Portal>
-      </AlertDialog.Root>
-    ) : null;
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Teacher Scheduling System</h1>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Rules:</h2>
-        <ul className="list-disc pl-5">
-          <li>No teacher should have more than 4 lectures per day.</li>
-          <li>No teacher should have fewer than 3 lectures per day.</li>
-          <li>Each teacher should have exactly 1 meeting per week.</li>
-          <li>
-            Each teacher should have exactly 2 paper correction sessions per
-            week.
-          </li>
-          <li>
-            No teacher should have overlapping activities at the same time and
-            day.
-          </li>
-        </ul>
-      </div>
-      {renderErrorAlert()}
+
+      {errorMessages.length > 0 && (
+        <div className="bg-red-200 text-red-800 p-2 rounded mb-4">
+          <ul className="list-disc pl-5">
+            {errorMessages.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {renderSchedulingForm()}
+
       {renderScheduleGrid()}
     </div>
   );
