@@ -53,7 +53,6 @@ const CourseSchedulingSystem: React.FC = () => {
   const [showRules, setShowRules] = useState(false);
 
   const addCourse = (courseId: string) => {
-    console.log(selectedCourses);
     if (selectedCourses.length >= 8) {
       setError("You cannot select more than 8 courses.");
       return;
@@ -172,7 +171,6 @@ const CourseSchedulingSystem: React.FC = () => {
   const handleSubmit = () => {
     if (validateSelection()) {
       console.log("Courses submitted successfully:", selectedCourses);
-      // Here you would typically send the data to a server
       alert("Courses submitted successfully!");
     }
   };
@@ -230,13 +228,9 @@ const CourseSchedulingSystem: React.FC = () => {
               <p className="text-sm text-gray-600 mb-2">{course.category}</p>
               <button
                 onClick={() => addCourse(course.id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none flex items-center"
-                disabled={selectedCourses.some((c) => c.courseId === course.id)}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                {selectedCourses.some((c) => c.courseId === course.id)
-                  ? "Added"
-                  : "Add Course"}
+                <Plus className="h-5 w-5" />
               </button>
             </div>
           ))}
@@ -245,91 +239,113 @@ const CourseSchedulingSystem: React.FC = () => {
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Selected Courses</h2>
-        <ul className="space-y-2">
-          {selectedCourses.map((selection) => {
-            const course = courses.find((c) => c.id === selection.courseId);
-            return (
-              <li
-                key={selection.courseId}
-                className="flex items-center justify-between bg-gray-100 p-2 rounded"
-              >
-                <span>
-                  {course?.name} - {course?.category}
-                </span>
-                <div className="flex items-center">
-                  <Select.Root
-                    onValueChange={(value) =>
-                      updatePreference(
-                        selection.courseId,
-                        parseInt(value) as 1 | 2 | 3,
-                      )
-                    }
-                    value={selection.preference?.toString() || ""}
-                  >
-                    <Select.Trigger className="inline-flex items-center justify-between rounded px-4 py-2 text-sm leading-none h-9 gap-1 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none">
-                      <Select.Value placeholder="Set preference" />
-                    </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Content className="overflow-hidden bg-white rounded-md shadow-lg">
-                        <Select.Viewport className="p-2">
-                          {[1, 2, 3].map((pref) => (
-                            <Select.Item
-                              key={pref}
-                              value={pref.toString()}
-                              className="relative flex items-center h-8 px-8 rounded text-sm text-gray-700 hover:bg-blue-100 focus:bg-blue-100 focus:outline-none select-none"
+        {selectedCourses.length === 0 ? (
+          <p className="text-gray-600">No courses selected.</p>
+        ) : (
+          <ul className="space-y-4">
+            {selectedCourses.map((selection, index) => {
+              const course = courses.find((c) => c.id === selection.courseId);
+              return (
+                <li
+                  key={selection.courseId}
+                  className="bg-white p-4 rounded-lg shadow flex items-center justify-between"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold mb-1">
+                      {course?.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-2">
+                      {course?.category}
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">Preference:</span>
+                      <Select.Root
+                        value={selection.preference?.toString() || ""}
+                        onValueChange={(value) =>
+                          updatePreference(
+                            selection.courseId,
+                            parseInt(value) as 1 | 2 | 3,
+                          )
+                        }
+                      >
+                        <Select.Trigger className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                          <Select.Value placeholder="Select" />
+                          <Select.Icon>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
                             >
-                              <Select.ItemText>
-                                {pref}st Preference
-                              </Select.ItemText>
-                            </Select.Item>
-                          ))}
-                        </Select.Viewport>
-                      </Select.Content>
-                    </Select.Portal>
-                  </Select.Root>
+                              <path
+                                fillRule="evenodd"
+                                d="M10 3a1 1 0 00-.894.553l-6 11A1 1 0 004 16h12a1 1 0 00.894-1.447l-6-11A1 1 0 0010 3z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </Select.Icon>
+                        </Select.Trigger>
+                        <Select.Portal>
+                          <Select.Content className="z-10 bg-white rounded shadow-lg">
+                            <Select.Viewport className="p-2">
+                              <Select.Item value="1">
+                                <Select.ItemText>1</Select.ItemText>
+                              </Select.Item>
+                              <Select.Item value="2">
+                                <Select.ItemText>2</Select.ItemText>
+                              </Select.Item>
+                              <Select.Item value="3">
+                                <Select.ItemText>3</Select.ItemText>
+                              </Select.Item>
+                            </Select.Viewport>
+                          </Select.Content>
+                        </Select.Portal>
+                      </Select.Root>
+                    </div>
+                  </div>
                   <button
                     onClick={() => removeCourse(selection.courseId)}
-                    className="ml-2 text-red-500 hover:text-red-700 focus:outline-none"
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none"
                   >
                     <X className="h-5 w-5" />
                   </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
+
+      {error && (
+        <AlertDialog.Root open={!!error} onOpenChange={() => setError(null)}>
+          <AlertDialog.Portal>
+            <AlertDialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
+            <AlertDialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
+              <AlertDialog.Title className="text-lg font-semibold text-red-600 flex items-center">
+                <AlertCircle className="h-5 w-5 mr-2" /> Error
+              </AlertDialog.Title>
+              <AlertDialog.Description className="mt-2 text-sm text-gray-700">
+                {error}
+              </AlertDialog.Description>
+              <div className="mt-4 flex justify-end">
+                <AlertDialog.Cancel
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                  onClick={() => setError(null)}
+                >
+                  Close
+                </AlertDialog.Cancel>
+              </div>
+            </AlertDialog.Content>
+          </AlertDialog.Portal>
+        </AlertDialog.Root>
+      )}
 
       <button
         onClick={handleSubmit}
-        className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 focus:outline-none"
-        disabled={selectedCourses.length !== 8}
+        className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none"
       >
-        Submit Course Selection
+        Submit Courses
       </button>
-
-      <AlertDialog.Root open={!!error}>
-        <AlertDialog.Portal>
-          <AlertDialog.Overlay className="bg-black/50 fixed inset-0" />
-          <AlertDialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 max-w-md w-full">
-            <AlertDialog.Title className="text-lg font-bold flex items-center">
-              <AlertCircle className="h-5 w-5 mr-2 text-red-500" />
-              Error
-            </AlertDialog.Title>
-            <AlertDialog.Description className="mt-2 text-sm text-gray-500">
-              {error}
-            </AlertDialog.Description>
-            <AlertDialog.Action asChild>
-              <button
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
-                onClick={() => setError(null)}
-              >
-                Okay
-              </button>
-            </AlertDialog.Action>
-          </AlertDialog.Content>
-        </AlertDialog.Portal>
-      </AlertDialog.Root>
     </div>
   );
 };
