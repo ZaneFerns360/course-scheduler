@@ -4,6 +4,7 @@ import { AlertCircle, Plus, X, Info, CheckCircle } from "lucide-react";
 import * as Select from "@radix-ui/react-select";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import Link from "next/link";
 
 type Course = {
   id: string;
@@ -385,7 +386,13 @@ const CourseSchedulingSystem: React.FC = () => {
         </div>
       )}
 
-      <div className="flex justify-end">
+      <div className="flex flex-row space-x-3 justify-end">
+        <Link
+          href="/items"
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+        >
+          Verfiy Schedule
+        </Link>
         <button
           onClick={handleSubmit}
           className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
