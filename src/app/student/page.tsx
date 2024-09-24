@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AlertCircle, Plus, X, Info, CheckCircle } from "lucide-react";
 import * as Select from "@radix-ui/react-select";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
@@ -22,24 +22,6 @@ type SelectedCourse = {
   preference: 1 | 2 | 3 | null;
 };
 
-const courses: Course[] = [
-  { id: "math1", name: "Algebra", category: "Math" },
-  { id: "math2", name: "Geometry", category: "Math" },
-  { id: "math3", name: "Calculus", category: "Math" },
-  { id: "sci1", name: "Biology", category: "Science" },
-  { id: "sci2", name: "Chemistry", category: "Science" },
-  { id: "sci3", name: "Physics", category: "Science" },
-  { id: "eng1", name: "Literature", category: "English" },
-  { id: "eng2", name: "Creative Writing", category: "English" },
-  { id: "his1", name: "World History", category: "History" },
-  { id: "his2", name: "US History", category: "History" },
-  { id: "wks1", name: "Woodworking", category: "Workshop" },
-  { id: "wks2", name: "Robotics", category: "Workshop" },
-  { id: "ext1", name: "Drama Club", category: "Extracurricular" },
-  { id: "ext2", name: "Debate Team", category: "Extracurricular" },
-  { id: "ext3", name: "Chess Club", category: "Extracurricular" },
-];
-
 const rules = [
   "Select exactly 8 courses in total.",
   "Choose at least 1 course from each category: Math, Science, English, History, and Workshop.",
@@ -48,9 +30,29 @@ const rules = [
 ];
 
 const CourseSchedulingSystem: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<SelectedCourse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showRules, setShowRules] = useState(false);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("http://localhost:8055/items/courses");
+        const data = await response.json();
+        const formattedCourses = data.data.map((course: any) => ({
+          id: course.id.toString(),
+          name: course.Name,
+          category: course.category,
+        }));
+        setCourses(formattedCourses);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const addCourse = (courseId: string) => {
     if (selectedCourses.length >= 8) {
