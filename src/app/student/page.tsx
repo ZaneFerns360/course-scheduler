@@ -22,6 +22,11 @@ type SelectedCourse = {
   preference: 1 | 2 | 3 | null;
 };
 
+type Schedule = {
+  rollNo: string;
+  selectedCourses: SelectedCourse[];
+};
+
 const rules = [
   "Select exactly 8 courses in total.",
   "Choose at least 1 course from each category: Math, Science, English, History, and Workshop.",
@@ -34,6 +39,7 @@ const CourseSchedulingSystem: React.FC = () => {
   const [selectedCourses, setSelectedCourses] = useState<SelectedCourse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showRules, setShowRules] = useState(false);
+  const [rollNo, setRollNo] = useState<string>("");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -174,6 +180,13 @@ const CourseSchedulingSystem: React.FC = () => {
     if (validateSelection()) {
       console.log("Courses submitted successfully:", selectedCourses);
       alert("Courses submitted successfully!");
+      const schedule: Schedule = {
+        rollNo,
+        selectedCourses,
+      };
+      localStorage.setItem(rollNo, JSON.stringify(schedule));
+      console.log("Courses submitted successfully:", selectedCourses);
+      alert("Courses submitted successfully!");
     }
   };
 
@@ -183,6 +196,17 @@ const CourseSchedulingSystem: React.FC = () => {
         Student Course Scheduling System
       </h1>
 
+      <div className="mb-6">
+        <label className="block text-lg font-semibold mb-2">
+          Enter Your Roll Number
+        </label>
+        <input
+          type="text"
+          value={rollNo}
+          onChange={(e) => setRollNo(e.target.value)}
+          className="border border-gray-300 p-2 rounded w-full"
+        />
+      </div>
       <div className="mb-6 bg-blue-50 p-4 rounded-lg">
         <h2 className="text-xl font-semibold mb-2 flex items-center">
           Course Selection Rules
