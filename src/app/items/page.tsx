@@ -14,6 +14,8 @@ import {
   Cell,
 } from "recharts";
 import { XCircle, CheckCircle } from "lucide-react";
+import clsx from "clsx"; // For conditional styling
+import { Separator } from "@radix-ui/react-separator";
 
 type Course = {
   id: string;
@@ -44,14 +46,20 @@ type CourseStats = {
   points: number;
 };
 
+type Teacher = {
+  id: number;
+  name: string;
+  category: string;
+};
+
 const DisplayUserCourses: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [courseStats, setCourseStats] = useState<CourseStats[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<SelectedCourse[]>([]);
-  const [timetable, setTimetable] = useState<{ [key: string]: string[] }>({});
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [timetable, setTimetable] = useState<string[][][]>([]); // For grid layout
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -63,6 +71,12 @@ const DisplayUserCourses: React.FC = () => {
           category: course.category,
         }));
         setCourses(formattedCourses);
+
+        fetch("http://localhost:8055/items/teachers")
+          .then((res) => res.json())
+          .then((data) => {
+            setTeachers(data.data);
+          });
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       }
@@ -130,45 +144,95 @@ const DisplayUserCourses: React.FC = () => {
     const updatedSchedules = schedules.map((schedule) => ({
       ...schedule,
       selectedCourses: schedule.selectedCourses.filter((course) =>
-        filtered.includes(course.courseId),
+        filtered.includes(course.courseId)
       ),
     }));
     setSchedules(updatedSchedules);
     setFilteredCourses(
-      updatedSchedules.flatMap((schedule) => schedule.selectedCourses),
+      updatedSchedules.flatMap((schedule) => schedule.selectedCourses)
     );
   };
 
-  const generateTimetable = () => {
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const times = [
-      "9:00 AM",
-      "10:00 AM",
-      "11:00 AM",
-      "12:00 PM",
-      "1:00 PM",
-      "2:00 PM",
-      "3:00 PM",
-    ];
-    const newTimetable: { [key: string]: string[] } = {};
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const timeSlots = [
+    "9 AM",
+    "10 AM",
+    "11 AM",
+    "12 PM",
+    "1 PM",
+    "2 PM",
+    "3 PM",
+    "4 PM",
+    "5 PM",
+  ];
 
-    days.forEach((day) => {
-      const lecturesForDay = filteredCourses.map((course) => {
-        const courseDetails = getCourseDetails(course.courseId);
-        const timeSlot = times[Math.floor(Math.random() * times.length)];
-        return `${courseDetails?.name || "Unknown"} (${timeSlot})`;
-      });
-      newTimetable[day] = lecturesForDay;
+  const categoryColors = {
+    Math: "bg-red-300",
+    Science: "bg-green-300",
+    English: "bg-blue-300",
+    History: "bg-yellow-300",
+    Workshop: "bg-purple-300",
+    Extracurricular: "bg-pink-300",
+  };
+  const generateTimetable = () => {
+    const tempTimetable: string[][][] = Array.from({ length: 5 }, () =>
+      Array.from({ length: 9 }, () => [])
+    ); // 5 days and 9 time slots
+
+    const teacherMap: { [category: string]: Teacher[] } = teachers.reduce(
+      (acc, teacher) => {
+        if (!acc[teacher.category]) acc[teacher.category] = [];
+        acc[teacher.category].push(teacher);
+        return acc;
+      },
+      {} as { [category: string]: Teacher[] }
+    );
+
+    if (!filteredCourses.length) {
+      console.error("No filtered courses available.");
+      return;
+    }
+
+    filteredCourses.forEach((selectedCourse) => {
+      const course = courses.find((c) => c.id === selectedCourse.courseId);
+      if (!course) {
+        console.error(`Course with ID ${selectedCourse.courseId} not found.`);
+        return;
+      }
+
+      const { category } = course;
+      const availableTeachers = teacherMap[category] || [];
+      if (availableTeachers.length > 0) {
+        let assigned = false;
+        for (let dayIndex = 0; dayIndex < 5 && !assigned; dayIndex++) {
+          for (let slotIndex = 0; slotIndex < 9; slotIndex++) {
+            const teacher =
+              availableTeachers[
+                Math.floor(Math.random() * availableTeachers.length)
+              ].name;
+
+            // Check if this time slot is already taken
+            if (!tempTimetable[dayIndex][slotIndex].length) {
+              tempTimetable[dayIndex][slotIndex].push(
+                `${course.name} - ${teacher}`
+              );
+              assigned = true;
+              break;
+            }
+          }
+        }
+        if (!assigned) {
+          console.error(
+            `Could not assign course ${course.name} to any time slot.`
+          );
+        }
+      } else {
+        console.error(`No available teachers for category ${category}.`);
+      }
     });
 
-    setTimetable(newTimetable);
+    setTimetable(tempTimetable);
   };
-
-  useEffect(() => {
-    if (filteredCourses.length > 0) {
-      generateTimetable();
-    }
-  }, [filteredCourses]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -240,7 +304,7 @@ const DisplayUserCourses: React.FC = () => {
               {schedule.selectedCourses.map((selectedCourse) => {
                 const courseDetails = getCourseDetails(selectedCourse.courseId);
                 const courseStat = courseStats.find(
-                  (stat) => stat.courseId === selectedCourse.courseId,
+                  (stat) => stat.courseId === selectedCourse.courseId
                 );
                 const isLowPoint = courseStat && courseStat.points < 5;
                 return (
@@ -277,28 +341,58 @@ const DisplayUserCourses: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Generated Timetable</h2>
-        <table className="min-w-full border border-gray-300">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-300 p-2">Day</th>
-              <th className="border border-gray-300 p-2">Courses</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(timetable).map(([day, courses]) => (
-              <tr key={day} className="border border-gray-300">
-                <td className="border border-gray-300 p-2">{day}</td>
-                <td className="border border-gray-300 p-2">
-                  {courses.map((course, index) => (
-                    <div key={index}>{course}</div>
-                  ))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div>
+        <button
+          onClick={generateTimetable}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Generate Timetable
+        </button>
+        <div className="mt-4 grid grid-cols-6 gap-4">
+          <div></div>
+          {days.map((day, index) => (
+            <div key={index} className="font-bold text-lg">
+              {day}
+            </div>
+          ))}
+
+          {timeSlots.map((slot, timeIndex) => (
+            <React.Fragment key={timeIndex}>
+              <div className="font-bold text-lg">{slot}</div>
+              {timetable.map((dayTimetable, dayIndex) => (
+                <div
+                  key={`${timeIndex}-${dayIndex}`}
+                  className="p-4 border rounded-lg h-24 flex justify-center items-center"
+                >
+                  {dayTimetable[timeIndex]?.length > 0 ? (
+                    dayTimetable[timeIndex].map((entry, idx) => {
+                      const [courseName, teacherName] = entry.split(" - ");
+                      const course = courses.find((c) => c.name === courseName);
+                      const color = course
+                        ? categoryColors[course.category]
+                        : "bg-gray-300";
+                      return (
+                        <div
+                          key={idx}
+                          className={`text-sm font-semibold text-center p-2 ${color} rounded`}
+                        >
+                          {courseName}
+                          <br />
+                          <span className="text-xs font-light">
+                            {teacherName}
+                          </span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-gray-500">Free</div>
+                  )}
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
