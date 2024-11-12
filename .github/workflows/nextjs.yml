@@ -23,3 +23,7 @@ jobs:
       - name: Build the project
         run: bun run build
 
+      - name: On Success Action
+        if: success()
+        run: echo "Build and tests were successful. Proceeding with additional actions."
+
