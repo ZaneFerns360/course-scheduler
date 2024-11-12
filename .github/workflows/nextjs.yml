@@ -27,3 +27,16 @@ jobs:
         if: success()
         run: echo "Build and tests were successful. Proceeding with additional actions."
 
+      - name: Send API Request
+        if: success() # Only runs if the build step is successful
+        env:
+          API_URL: https://course-scheduler-zeta.vercel.app/api
+        run: |
+          response=$(curl -X GET "$API_URL" -w "%{http_code}" -o /dev/null)
+          if [ "$response" -ne 200 ]; then
+            echo "API request failed with status code $response"
+            exit 1
+          else
+            echo "API request was successful"
+          fi
+
