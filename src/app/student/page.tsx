@@ -43,19 +43,35 @@ const CourseSchedulingSystem: React.FC = () => {
   const [rollNo, setRollNo] = useState<string>("");
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch("http://localhost:8055/items/courses");
-        const data = await response.json();
-        const formattedCourses = data.data.map((course: any) => ({
-          id: course.id.toString(),
-          name: course.Name,
-          category: course.category,
-        }));
-        setCourses(formattedCourses);
-      } catch (error) {
-        console.error("Failed to fetch courses:", error);
-      }
+    const fetchCourses = () => {
+      const courses: Course[] = [
+        { id: "1", name: "Calculus 101", category: "Math" },
+        { id: "2", name: "Linear Algebra", category: "Math" },
+        { id: "3", name: "Statistics Basics", category: "Math" },
+        { id: "4", name: "Physics Fundamentals", category: "Science" },
+        { id: "5", name: "Chemistry Principles", category: "Science" },
+        { id: "6", name: "Biology 101", category: "Science" },
+        { id: "7", name: "Literature and Composition", category: "English" },
+        { id: "8", name: "Creative Writing", category: "English" },
+        { id: "9", name: "Advanced Grammar", category: "English" },
+        { id: "10", name: "World History", category: "History" },
+        { id: "11", name: "American History", category: "History" },
+        { id: "12", name: "Ancient Civilizations", category: "History" },
+        { id: "13", name: "Woodworking Basics", category: "Workshop" },
+        { id: "14", name: "Metalworking", category: "Workshop" },
+        { id: "15", name: "Electronics Workshop", category: "Workshop" },
+        { id: "16", name: "Photography", category: "Extracurricular" },
+        { id: "17", name: "Music Appreciation", category: "Extracurricular" },
+        { id: "18", name: "Drama and Theatre", category: "Extracurricular" },
+      ];
+
+      const formattedCourses = courses.map((course) => ({
+        id: course.id,
+        name: course.name,
+        category: course.category,
+      }));
+
+      setCourses(formattedCourses);
     };
 
     fetchCourses();

@@ -62,24 +62,54 @@ const DisplayUserCourses: React.FC = () => {
   const [timetable, setTimetable] = useState<string[][][]>([]); // For grid layout
   useEffect(() => {
     const fetchCourses = async () => {
-      try {
-        const response = await fetch("http://localhost:8055/items/courses");
-        const data = await response.json();
-        const formattedCourses = data.data.map((course: any) => ({
-          id: course.id.toString(),
-          name: course.Name,
-          category: course.category,
-        }));
-        setCourses(formattedCourses);
+      const data: Course[] = [
+        { id: "1", name: "Calculus 101", category: "Math" },
+        { id: "2", name: "Linear Algebra", category: "Math" },
+        { id: "3", name: "Statistics Basics", category: "Math" },
+        { id: "4", name: "Physics Fundamentals", category: "Science" },
+        { id: "5", name: "Chemistry Principles", category: "Science" },
+        { id: "6", name: "Biology 101", category: "Science" },
+        { id: "7", name: "Literature and Composition", category: "English" },
+        { id: "8", name: "Creative Writing", category: "English" },
+        { id: "9", name: "Advanced Grammar", category: "English" },
+        { id: "10", name: "World History", category: "History" },
+        { id: "11", name: "American History", category: "History" },
+        { id: "12", name: "Ancient Civilizations", category: "History" },
+        { id: "13", name: "Woodworking Basics", category: "Workshop" },
+        { id: "14", name: "Metalworking", category: "Workshop" },
+        { id: "15", name: "Electronics Workshop", category: "Workshop" },
+        { id: "16", name: "Photography", category: "Extracurricular" },
+        { id: "17", name: "Music Appreciation", category: "Extracurricular" },
+        { id: "18", name: "Drama and Theatre", category: "Extracurricular" },
+      ];
+      const formattedCourses = data.map((course: any) => ({
+        id: course.id.toString(),
+        name: course.Name,
+        category: course.category,
+      }));
+      setCourses(formattedCourses);
 
-        fetch("http://localhost:8055/items/teachers")
-          .then((res) => res.json())
-          .then((data) => {
-            setTeachers(data.data);
-          });
-      } catch (error) {
-        console.error("Failed to fetch courses:", error);
-      }
+      const teachers: Teacher[] = [
+        { id: 1, name: "Alice Johnson", category: "Math" },
+        { id: 2, name: "Bob Smith", category: "Math" },
+        { id: 3, name: "Carol Williams", category: "Math" },
+        { id: 4, name: "David Brown", category: "Science" },
+        { id: 5, name: "Eve Davis", category: "Science" },
+        { id: 6, name: "Frank Wilson", category: "Science" },
+        { id: 7, name: "Grace Miller", category: "English" },
+        { id: 8, name: "Henry Taylor", category: "English" },
+        { id: 9, name: "Ivy Anderson", category: "English" },
+        { id: 10, name: "Jack Thomas", category: "History" },
+        { id: 11, name: "Karen Martinez", category: "History" },
+        { id: 12, name: "Leo Jackson", category: "History" },
+        { id: 13, name: "Mona White", category: "Workshop" },
+        { id: 14, name: "Nathan Harris", category: "Workshop" },
+        { id: 15, name: "Olivia Clark", category: "Workshop" },
+        { id: 16, name: "Paul Lewis", category: "Extracurricular" },
+        { id: 17, name: "Quincy Robinson", category: "Extracurricular" },
+        { id: 18, name: "Rachel Walker", category: "Extracurricular" },
+      ];
+      setTeachers(teachers);
     };
 
     const fetchSchedulesFromLocalStorage = () => {
@@ -144,12 +174,12 @@ const DisplayUserCourses: React.FC = () => {
     const updatedSchedules = schedules.map((schedule) => ({
       ...schedule,
       selectedCourses: schedule.selectedCourses.filter((course) =>
-        filtered.includes(course.courseId)
+        filtered.includes(course.courseId),
       ),
     }));
     setSchedules(updatedSchedules);
     setFilteredCourses(
-      updatedSchedules.flatMap((schedule) => schedule.selectedCourses)
+      updatedSchedules.flatMap((schedule) => schedule.selectedCourses),
     );
   };
 
@@ -176,7 +206,7 @@ const DisplayUserCourses: React.FC = () => {
   };
   const generateTimetable = () => {
     const tempTimetable: string[][][] = Array.from({ length: 5 }, () =>
-      Array.from({ length: 9 }, () => [])
+      Array.from({ length: 9 }, () => []),
     ); // 5 days and 9 time slots
 
     const teacherMap: { [category: string]: Teacher[] } = teachers.reduce(
@@ -185,7 +215,7 @@ const DisplayUserCourses: React.FC = () => {
         acc[teacher.category].push(teacher);
         return acc;
       },
-      {} as { [category: string]: Teacher[] }
+      {} as { [category: string]: Teacher[] },
     );
 
     if (!filteredCourses.length) {
@@ -214,7 +244,7 @@ const DisplayUserCourses: React.FC = () => {
             // Check if this time slot is already taken
             if (!tempTimetable[dayIndex][slotIndex].length) {
               tempTimetable[dayIndex][slotIndex].push(
-                `${course.name} - ${teacher}`
+                `${course.name} - ${teacher}`,
               );
               assigned = true;
               break;
@@ -223,7 +253,7 @@ const DisplayUserCourses: React.FC = () => {
         }
         if (!assigned) {
           console.error(
-            `Could not assign course ${course.name} to any time slot.`
+            `Could not assign course ${course.name} to any time slot.`,
           );
         }
       } else {
@@ -304,7 +334,7 @@ const DisplayUserCourses: React.FC = () => {
               {schedule.selectedCourses.map((selectedCourse) => {
                 const courseDetails = getCourseDetails(selectedCourse.courseId);
                 const courseStat = courseStats.find(
-                  (stat) => stat.courseId === selectedCourse.courseId
+                  (stat) => stat.courseId === selectedCourse.courseId,
                 );
                 const isLowPoint = courseStat && courseStat.points < 5;
                 return (
