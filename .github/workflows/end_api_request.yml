@@ -1,0 +1,25 @@
+name: Send API Request to Course Scheduler
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour. Adjust this to your desired schedule.
+
+  workflow_dispatch:
+
+jobs:
+  send-api-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send API Request
+        env:
+          API_URL: https://course-scheduler-zeta.vercel.app/api
+        run: |
+          response=$(curl -X GET "$API_URL" -w "%{http_code}" -o /dev/null)
+          if [ "$response" -ne 200 ]; then
+            echo "API request failed with status code $response"
+            exit 1
+          else
+            echo "API request was successful"
+          fi
+
