@@ -15,6 +15,9 @@ async function testLogout() {
 
     console.log("Response status:", response.status);
 
+
+    //dn
+
     if (response.status === 204) {
       console.log("Logout successful");
     } else {
